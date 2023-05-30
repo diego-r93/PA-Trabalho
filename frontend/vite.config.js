@@ -35,6 +35,9 @@ export default defineConfig({
       '.vue',
     ],
   },
+  build: {
+    outDir: '../backend/dist'
+  },
   server: {
     port: 7000,
   },

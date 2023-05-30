@@ -7,7 +7,7 @@ const port = 3050
 // })
 
 app.get('/', function(req, res){
-  res.sendFile(__dirname + '/data/index.html');
+  res.sendFile(__dirname + '/dist/index.html');
 });
 
 app.listen(port, () => {
