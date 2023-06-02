@@ -4,15 +4,68 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    component: () => import('@/layouts/default/Default.vue'),
+    component: () => import('@/layouts/DefaultView.vue'),
     children: [
       {
-        path: '',
+        path: '/home',
         name: 'Home',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "home" */ '@/views/HomeView.vue'),
+      },
+      {
+        path: "/dashboard",
+        // meta: {
+        //   requiresAuth: true,
+        //   layout: "landing",
+        // },
+        component: () => import("@/views/DashBoard.vue"),
+      },
+      {
+        path: "/device",
+        // meta: {
+        //   requiresAuth: true,
+        //   layout: "landing",
+        // },
+        component: () => import("@/views/DeviceConfiguration.vue"),
+      },
+      {
+        path: "/database",
+        // meta: {
+        //   requiresAuth: true,
+        //   layout: "landing",
+        // },
+        component: () => import("@/views/DatabaseConfiguration.vue"),
+      },
+      {
+        path: "/account",
+        // meta: {
+        //   requiresAuth: true,
+        //   layout: "landing",
+        // },
+        component: () => import("@/views/MyAccount.vue"),
+      },
+      {
+        path: "/users",
+        // meta: {
+        //   requiresAuth: true,
+        //   layout: "landing",
+        // },
+        component: () => import("@/views/UsersConfiguration.vue"),
+      },
+      {
+        path: "/configuration",
+        // meta: {
+        //   requiresAuth: true,
+        //   layout: "landing",
+        // },
+        component: () => import("@/views/PageConfiguration.vue"),
+      },
+      {
+        path: "/help",
+        // meta: {
+        //   requiresAuth: true,
+        //   layout: "landing",
+        // },
+        component: () => import("@/views/HelpMenu.vue"),
       },
     ],
   },
