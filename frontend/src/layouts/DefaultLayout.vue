@@ -1,13 +1,12 @@
 <template>
-  <v-app theme="dark">
+  <v-app theme="dark" >
     <navigation-drawer></navigation-drawer>
     <v-main>
       <router-view />
     </v-main>
   </v-app>
-  <router-view />
 </template>
 
 <script setup>
-import NavigationDrawer from './NavigationDrawer.vue'
+  import NavigationDrawer from '@/components/navigation/NavigationDrawer.vue'
 </script>
