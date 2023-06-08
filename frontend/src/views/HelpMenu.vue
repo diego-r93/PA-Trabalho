@@ -1,7 +1,7 @@
 <template>
-  <InfoCard />
+  <HelpMenu />
 </template>
 
 <script setup>
-  import InfoCard from '@/components/help/HelpMenu.vue'
+  import HelpMenu from '@/components/help/HelpMenu.vue'
 </script>

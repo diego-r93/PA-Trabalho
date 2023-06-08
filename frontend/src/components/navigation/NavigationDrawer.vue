@@ -4,7 +4,7 @@
 
     <v-list density="compact" nav>
       <v-list-item v-for="item in items" :key="item.value" :prepend-icon="item.icon" :title="item.title"
-        :value="item.value" :to="item.path" @click="selectItem(item.value)"></v-list-item>       
+        :value="item.value" :to="item.path" @click="selectItem(item.value)"></v-list-item>
     </v-list>
 
     <v-list-item class="drawer-toggle-button">
@@ -14,16 +14,21 @@
       </template>
     </v-list-item>
 
-    <v-list nav>
-      <template v-slot:append>
-        
-      </template>
-    </v-list>
+
+    <template v-slot:append>
+      <v-list>
+        <v-list-item prepend-icon="mdi-help-circle-outline" title="Help" value="help" to="/help"></v-list-item>
+        <v-list-item prepend-icon="mdi mdi-logout" title="Logout" value="logout" @click.stop="logoutUser"></v-list-item>
+      </v-list>
+    </template>
 
   </v-navigation-drawer>
 </template>
 
 <script>
+import router from '@/router'
+import { logout } from '@/scripts/auth.js'
+
 export default {
   data() {
     return {
@@ -35,7 +40,6 @@ export default {
         { title: 'My Account', icon: 'mdi-account', value: "account", path: '/account' },
         { title: 'Users', icon: 'mdi-account-group-outline', value: "users", path: '/users' },
         { title: 'Configuration', icon: 'mdi-cog-outline', value: "configuration", path: '/configuration' },
-        { title: 'Help', icon: 'mdi-help-circle-outline', value: "help", path: '/help' },
       ],
       rail: true,
       selectedItem: 'dashboard',
@@ -43,7 +47,13 @@ export default {
   },
   methods: {
     selectItem(itemValue) {
-      this.selectedItem = itemValue;
+      this.selectedItem = itemValue
+    },
+    logoutUser() {
+      localStorage.removeItem('token')
+      localStorage.removeItem('expiration')
+      logout()
+      router.push('/login')
     },
   },
 }
@@ -61,7 +71,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.16);
   cursor: pointer;
 }
 </style>

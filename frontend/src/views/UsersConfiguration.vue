@@ -1,7 +1,7 @@
 <template>
-  <InfoCard />
+  <UsersConfiguration />
 </template>
 
 <script setup>
-  import InfoCard from '@/components/users/UsersConfiguration.vue'
+  import UsersConfiguration from '@/components/users/UsersConfiguration.vue'
 </script>

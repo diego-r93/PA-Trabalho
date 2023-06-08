@@ -1,38 +1,36 @@
 <template>
-  <v-app>
-    <component :is="currentLayout">
+  <v-app theme="dark">
+    <component :is="currentLayout" v-if="isRouterLoaded">
+      <router-view></router-view>
     </component>
   </v-app>
 </template>
 
-<script>
-import { computed } from "vue";
-import { useRoute } from "vue-router";
-import DefaultLayout from "@/layouts/DefaultLayout.vue";
-import AuthLayout from "@/layouts/AuthLayout.vue";
+<script setup>
+import { computed } from "vue"
+import { useRoute } from "vue-router"
+import DefaultLayout from "@/layouts/DefaultLayout.vue"
+import AuthLayout from "@/layouts/AuthLayout.vue"
+import UserInterfaceLayout from "@/layouts/UserInterfaceLayout.vue"
 
-export default {
-  components: {
-    DefaultLayout,
-    AuthLayout,
-  },
-  setup() {
-    const route = useRoute();
+const route = useRoute();
 
-    const layouts = {
-      default: DefaultLayout,
-      auth: AuthLayout,
-    };
+const isRouterLoaded = computed(() => {
+  return route.name !== null ? true : false
+})
 
-    const currentLayout = computed(() => {
-      const layoutName = route.meta.layout;
-      return layoutName ? layouts[layoutName] : DefaultLayout;
-    });
+const layouts = {
+  default: DefaultLayout,
+  auth: AuthLayout,
+  ui: UserInterfaceLayout,
+}
 
-    return {
-      currentLayout,
-    };
-  },
-};
+const currentLayout = computed(() => {
+  const layoutName = route.meta.layout
+  if (!layoutName) {
+    return DefaultLayout
+  }
+  return layouts[layoutName]
+})
 </script>
 

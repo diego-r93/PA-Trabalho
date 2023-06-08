@@ -32,7 +32,7 @@
   data: () => ({
     devices: [
       { mdns: 'esp32-015010', src: 'http://192.168.1.2', flex: 4 },
-      { mdns: 'esp32-C30B7C', src: 'http://192.168.1.3', flex: 4 },
+      { mdns: 'esp32-C30B7C', src: 'http://192.168.1.3', flex: 4 },      
     ],
   }),
 }

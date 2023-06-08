@@ -1,7 +1,7 @@
 <template>
-  <InfoCard />
+  <ConfigurationMenu />
 </template>
 
 <script setup>
-  import InfoCard from '@/components/configuration/ConfigurationMenu.vue'
+  import ConfigurationMenu from '@/components/configuration/ConfigurationMenu.vue'
 </script>

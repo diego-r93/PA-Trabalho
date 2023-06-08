@@ -11,7 +11,7 @@ const routes = [
     path: "/dashboard",
     meta: {
       requiresAuth: true,
-      layout: "default",
+      layout: "ui",
     },
     component: () => import("@/views/DashBoard.vue"),
   },
@@ -19,7 +19,7 @@ const routes = [
     path: "/device",
     meta: {
       requiresAuth: true,
-      layout: "default",
+      layout: "ui",
     },
     component: () => import("@/views/DeviceConfiguration.vue"),
   },
@@ -27,7 +27,7 @@ const routes = [
     path: "/database",
     meta: {
       requiresAuth: true,
-      layout: "default",
+      layout: "ui",
     },
     component: () => import("@/views/DatabaseConfiguration.vue"),
   },
@@ -35,7 +35,7 @@ const routes = [
     path: "/account",
     meta: {
       requiresAuth: true,
-      layout: "default",
+      layout: "ui",
     },
     component: () => import("@/views/MyAccount.vue"),
   },
@@ -43,7 +43,7 @@ const routes = [
     path: "/users",
     meta: {
       requiresAuth: true,
-      layout: "default",
+      layout: "ui",
     },
     component: () => import("@/views/UsersConfiguration.vue"),
   },
@@ -51,7 +51,7 @@ const routes = [
     path: "/configuration",
     meta: {
       requiresAuth: true,
-      layout: "default",
+      layout: "ui",
     },
     component: () => import("@/views/PageConfiguration.vue"),
   },
@@ -59,12 +59,19 @@ const routes = [
     path: "/help",
     meta: {
       requiresAuth: true,
-      layout: "default",
-    },
+      layout: "ui",
+    },    
     component: () => import("@/views/HelpMenu.vue"),
   },
   {
     path: '/login',
+    meta: {
+      layout: "auth",
+    },
+    component: () => import("@/views/LoginPage.vue"),
+  },
+  {
+    path: '/signup',
     meta: {
       layout: "auth",
     },
@@ -75,16 +82,28 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes: routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { top: 0 };
+    }
+  },  
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
-  if (requiresAuth && !isAuthenticated()) {
-    next('/login');
-  } else {
-    next();
+  if (requiresAuth) {
+    const authenticated = isAuthenticated();
+
+    if (!authenticated) {
+      next('/login');
+      return;
+    }
   }
+
+  next();
 })
 
 export default router

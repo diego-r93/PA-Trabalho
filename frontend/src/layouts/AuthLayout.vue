@@ -1,7 +1,6 @@
 <template>
-  <v-app theme="dark">
-    <v-main>
-      <router-view />
-    </v-main>
-  </v-app>  
+  <v-main>
+    <slot></slot>
+    <v-footer></v-footer>
+  </v-main>
 </template>

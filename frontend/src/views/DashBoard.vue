@@ -3,5 +3,5 @@
 </template>
 
 <script setup>
-  import InfoCard from '@/components/dashboard/infoCard.vue'
+  import InfoCard from '@/components/dashboard/InfoCard.vue'
 </script>

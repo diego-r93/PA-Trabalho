@@ -1,7 +1,7 @@
 <template>
-  <InfoCard />
+  <DatabaseCard />
 </template>
 
 <script setup>
-  import InfoCard from '@/components/database/DatabaseCard.vue'
+  import DatabaseCard from '@/components/database/DatabaseCard.vue'
 </script>
