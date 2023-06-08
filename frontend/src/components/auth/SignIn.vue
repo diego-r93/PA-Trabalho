@@ -45,14 +45,16 @@ export default {
       loading: false,
     }
   },
-  created() {
+  mounted() {
     const token = localStorage.getItem('token')
     const expiration = localStorage.getItem('expiration')
 
     if (token && expiration) {
       const currentTime = new Date().getTime()
+      const authenticated = isAuthenticated()
+      
       if (currentTime < parseInt(expiration)) {
-        if (!isAuthenticated()) {
+        if (!authenticated) {
           login()
         }
         router.push('/')

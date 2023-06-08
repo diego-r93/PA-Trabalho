@@ -60,7 +60,7 @@ const routes = [
     meta: {
       requiresAuth: true,
       layout: "ui",
-    },    
+    },
     component: () => import("@/views/HelpMenu.vue"),
   },
   {
@@ -88,22 +88,18 @@ const router = createRouter({
     } else {
       return { top: 0 };
     }
-  },  
+  },
 })
 
 router.beforeEach(async (to, from, next) => {
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
-  if (requiresAuth) {
-    const authenticated = isAuthenticated();
+  const authenticated = isAuthenticated()
 
-    if (!authenticated) {
-      next('/login');
-      return;
-    }
+  if (requiresAuth && !authenticated) {
+    next('/login')
   }
-
-  next();
+  else next()  
 })
 
 export default router

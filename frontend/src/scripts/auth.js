@@ -1,6 +1,13 @@
 let authenticated = false
 
 export function isAuthenticated() {
+
+  const token = localStorage.getItem('token')
+  const expiration = localStorage.getItem('expiration')
+  const currentTime = new Date().getTime()
+
+  authenticated = (token && expiration && currentTime < parseInt(expiration)) ? true : false
+
   return authenticated
 }
 
