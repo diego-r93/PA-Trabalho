@@ -1,15 +1,19 @@
 const express = require('express')
+const path = require('path')
+
 const app = express()
-const port = 3050
 
-// app.get('/', (req, res) => {
-//   res.send('Hello World!')
-// })
+const host = process.env.HOST || '127.0.0.1'
+const port = process.env.PORT || 3050
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/dist/index.html');
-});
+// Serve Vue.js as SPA in production
+app.use(express.static('dist'))
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+app.get('/', (req, res, next) => {
+  res.sendFile('index.html', { 'root': path.join(__dirname, '../dist') })
+})
+
+// Listen the server
+app.listen(port, host, () => {
+  console.log('Server listening on ' + host + ':' + port) // eslint-disable-line no-console
 })

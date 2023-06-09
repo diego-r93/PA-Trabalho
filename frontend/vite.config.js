@@ -39,6 +39,6 @@ export default defineConfig({
     outDir: '../backend/dist'
   },
   server: {
-    port: 7000,
+    port: 7500,
   },
 })
