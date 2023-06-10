@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid fill-height class="pa-16 gradient-container" style="height: 100vh;">
+  <v-container fluid fill-height class="pa-16 gradient-container" style="height: 100%;">
     <v-row class="d-flex align-center justify-center" style="height: 100%;">
       <v-col cols="12" sm="8" md="6">
         <v-card class="mx-auto px-6 py-8 rounded-lg" max-width="400" elevation="12">
@@ -18,9 +18,14 @@
               variant="elevated">
               Log in
             </v-btn>
-            <div class="text-right mt-2">
+            <div class="text-center mt-2">
               <v-btn class="transparent-btn text-indigo" elevation="0">
                 <p class="text-capitalize">Forgot your password?</p>
+              </v-btn>
+            </div>
+            <div class="text-center mt-2">
+              <v-btn :to="'/register'" class="transparent-btn text-indigo" elevation="0">
+                <p class="text-capitalize">Don't have an account yet? Register</p>
               </v-btn>
             </div>
           </v-form>
@@ -91,6 +96,7 @@ export default {
         .catch((error) => {
           console.log(error.code);
           alert(error.message);
+          this.loading = false
         });
     },
     onSubmit() {
