@@ -71,11 +71,11 @@ const routes = [
     component: () => import("@/views/LoginPage.vue"),
   },
   {
-    path: '/signup',
+    path: '/register',
     meta: {
       layout: "auth",
     },
-    component: () => import("@/views/LoginPage.vue"),
+    component: () => import("@/views/RegisterPage.vue"),
   },
 ]
 

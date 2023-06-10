@@ -1,0 +1,100 @@
+<template>
+  <v-container fluid fill-height class="pa-16 gradient-container" style="height: 100%;">
+    <v-row class="d-flex align-center justify-center" style="height: 100%;">
+      <v-col cols="12" sm="8" md="6">
+        <v-card class="mx-auto px-6 py-8 rounded-lg" max-width="400" elevation="12">
+          <v-img src="@/assets/images/hydroponic.png" class="mx-auto" :width="100" height="100" contain>
+          </v-img>
+          <v-card-title class="text-center py-12">
+            <h2 class="text-h4">Welcome</h2>
+          </v-card-title>
+          <v-form v-model="form" @submit.prevent="onSubmit">
+            <v-text-field v-model="email" :readonly="loading" :rules="[required]" class="mb-2" clearable
+              label="Email"></v-text-field>
+            <v-text-field v-model="password" :readonly="loading" :rules="[required]" clearable label="Password"
+              placeholder="Enter your password"></v-text-field>
+            <br>
+            <v-btn :disabled="!form" :loading="loading" block color="indigo" size="large" type="submit"
+              variant="elevated">
+              Register
+            </v-btn>
+            <div class="text-center mt-2">
+              <v-btn :to="'/login'" class="transparent-btn text-indigo" elevation="0">
+                <p class="text-capitalize">Aleady have an account? Login</p>
+              </v-btn>
+            </div>
+          </v-form>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script>
+import router from '@/router'
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
+import { isAuthenticated, login, logout } from '@/scripts/auth.js'
+
+export default {
+  name: 'Register',
+  data() {
+    return {
+      form: false,
+      email: "",
+      username: "",
+      password: "",
+      loading: false,
+    }
+  },
+  mounted() {
+    const token = localStorage.getItem('token')
+    const expiration = localStorage.getItem('expiration')
+
+    if (token && expiration) {
+      const currentTime = new Date().getTime()
+      const authenticated = isAuthenticated()
+      
+      if (currentTime < parseInt(expiration)) {
+        if (!authenticated) {
+          login()
+        }
+        router.push('/')
+      } else {
+        logout()
+        localStorage.removeItem('token')
+        localStorage.removeItem('expiration')
+      }
+    }
+  },
+  methods: {
+    signup() {
+      const auth = getAuth();
+
+      createUserWithEmailAndPassword(auth, this.email, this.password)
+      .then((userCredential) => {
+        alert("Cadastro realizado com sucesso! Faça seu login.");
+        router.push('/login');
+      })
+      .catch((error) => {
+        alert(error.message);
+        this.loading = false
+      })
+    },
+    onSubmit() {
+      if (!this.form) return
+
+      this.loading = true
+      this.signup()
+    },
+    required(v) {
+      return !!v || 'Field is required'
+    }
+  }
+}
+</script>
+
+<style>
+.gradient-container {
+  background: linear-gradient(to bottom, #004d40, #002b27);
+}
+</style>
