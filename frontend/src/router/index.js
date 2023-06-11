@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { isAuthenticated } from '@/scripts/auth'
+import { isAuthenticated } from '@/services/auth'
 
 const routes = [
   {
@@ -38,15 +38,7 @@ const routes = [
       layout: "ui",
     },
     component: () => import("@/views/MyAccount.vue"),
-  },
-  {
-    path: "/users",
-    meta: {
-      requiresAuth: true,
-      layout: "ui",
-    },
-    component: () => import("@/views/UsersConfiguration.vue"),
-  },
+  }, 
   {
     path: "/configuration",
     meta: {
@@ -71,11 +63,11 @@ const routes = [
     component: () => import("@/views/LoginPage.vue"),
   },
   {
-    path: '/register',
+    path: '/signup',
     meta: {
       layout: "auth",
     },
-    component: () => import("@/views/RegisterPage.vue"),
+    component: () => import("@/views/SignUpPage.vue"),
   },
 ]
 

@@ -6,20 +6,21 @@
           <v-img src="@/assets/images/hydroponic.png" class="mx-auto" :width="100" height="100" contain>
           </v-img>
           <v-card-title class="text-center py-12">
-            <h2 class="text-h4">Welcome</h2>
+            <h2 class="text-h4">Sign Up</h2>
           </v-card-title>
           <v-form v-model="form" @submit.prevent="onSubmit">
             <v-text-field v-model="email" :readonly="loading" :rules="[required]" class="mb-2" clearable
               label="Email"></v-text-field>
-            <v-text-field v-model="password" :readonly="loading" :rules="[required]" clearable label="Password"
-              placeholder="Enter your password"></v-text-field>
+            <v-text-field v-model="password" :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'" :readonly="loading"
+              :rules="[required]" :type="show ? 'text' : 'password'" clearable label="Password"
+              @click:append-inner="show = !show"></v-text-field>
             <br>
             <v-btn :disabled="!form" :loading="loading" block color="indigo" size="large" type="submit"
               variant="elevated">
-              Register
+              Sign Up
             </v-btn>
             <div class="text-center mt-2">
-              <v-btn :to="'/login'" class="transparent-btn text-indigo" elevation="0">
+              <v-btn to="/login" class="transparent-btn text-indigo" elevation="0">
                 <p class="text-capitalize">Aleady have an account? Login</p>
               </v-btn>
             </div>
@@ -33,16 +34,19 @@
 <script>
 import router from '@/router'
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
-import { isAuthenticated, login, logout } from '@/scripts/auth.js'
+import { isAuthenticated, login, logout } from '@/services/auth'
+
+import fireStoreDataService from "@/services/firestoreDataService"
 
 export default {
-  name: 'Register',
+  name: 'SignUp',
   data() {
     return {
+      show: false,
       form: false,
       email: "",
-      username: "",
       password: "",
+      id: "",
       loading: false,
     }
   },
@@ -53,7 +57,7 @@ export default {
     if (token && expiration) {
       const currentTime = new Date().getTime()
       const authenticated = isAuthenticated()
-      
+
       if (currentTime < parseInt(expiration)) {
         if (!authenticated) {
           login()
@@ -70,15 +74,24 @@ export default {
     signup() {
       const auth = getAuth();
 
-      createUserWithEmailAndPassword(auth, this.email, this.password)
-      .then((userCredential) => {
-        alert("Cadastro realizado com sucesso! Faça seu login.");
-        router.push('/login');
-      })
-      .catch((error) => {
-        alert(error.message);
-        this.loading = false
-      })
+      fireStoreDataService.create({ email: this.email })
+        .then(response => {
+          this.id = response.data.id
+
+          createUserWithEmailAndPassword(auth, this.email, this.password)
+            .then((userCredential) => {
+              console.log(userCredential);
+              alert("Cadastro realizado com sucesso! Faça seu login.");
+              router.push('/login');
+            })
+            .catch((error) => {
+              alert(error.message);
+              this.loading = false
+            })
+        })
+        .catch(e => {
+          console.log(e)
+        })
     },
     onSubmit() {
       if (!this.form) return

@@ -3,7 +3,15 @@ module.exports = app => {
 
   var router = require("express").Router()
 
-  router.post('/create', firestore.create)
+  router.post('/', firestore.create)
+
+  router.get('/', firestore.findAll)
+
+  router.get("/:id", firestore.findOne)
+
+  router.put("/:id", firestore.update)
+
+  router.delete("/:id", firestore.delete)
 
   app.use("/users", router)
 }

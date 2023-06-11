@@ -5,7 +5,7 @@ const path = require('path')
 
 const cors = require("cors")
 const corsOptions = {
-  origin: "http://localhost:8081"
+  origin: "http://localhost:7500"
 }
 app.use(cors(corsOptions))
 

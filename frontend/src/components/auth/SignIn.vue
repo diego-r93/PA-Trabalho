@@ -11,8 +11,9 @@
           <v-form v-model="form" @submit.prevent="onSubmit">
             <v-text-field v-model="email" :readonly="loading" :rules="[required]" class="mb-2" clearable
               label="Email"></v-text-field>
-            <v-text-field v-model="password" :readonly="loading" :rules="[required]" clearable label="Password"
-              placeholder="Enter your password"></v-text-field>
+            <v-text-field v-model="password" :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'" :readonly="loading"
+              :rules="[required]" :type="show ? 'text' : 'password'" clearable label="Password"
+              @click:append-inner="show = !show"></v-text-field>
             <br>
             <v-btn :disabled="!form" :loading="loading" block color="indigo" size="large" type="submit"
               variant="elevated">
@@ -24,7 +25,7 @@
               </v-btn>
             </div>
             <div class="text-center mt-2">
-              <v-btn :to="'/register'" class="transparent-btn text-indigo" elevation="0">
+              <v-btn to="/signup" class="transparent-btn text-indigo" elevation="0">
                 <p class="text-capitalize">Don't have an account yet? Register</p>
               </v-btn>
             </div>
@@ -38,12 +39,13 @@
 <script>
 import router from '@/router'
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
-import { isAuthenticated, login, logout } from '@/scripts/auth.js'
+import { isAuthenticated, login, logout } from '@/services/auth'
 
 export default {
   name: "SignIn",
   data() {
     return {
+      show: false,
       form: false,
       email: "",
       password: "",
@@ -57,7 +59,7 @@ export default {
     if (token && expiration) {
       const currentTime = new Date().getTime()
       const authenticated = isAuthenticated()
-      
+
       if (currentTime < parseInt(expiration)) {
         if (!authenticated) {
           login()
