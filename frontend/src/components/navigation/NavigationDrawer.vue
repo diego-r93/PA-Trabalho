@@ -14,14 +14,11 @@
       </template>
     </v-list-item>
 
-
-    <template v-slot:append>
-      <v-list>
+    <template v-slot:append>      
         <v-list-item prepend-icon="mdi-cog-outline" title="Configuration" value="configuration"
           to="/configuration"></v-list-item>
         <v-list-item prepend-icon="mdi-help-circle-outline" title="Help" value="help" to="/help"></v-list-item>
-        <v-list-item prepend-icon="mdi mdi-logout" title="Logout" value="logout" @click.stop="logoutUser"></v-list-item>
-      </v-list>
+        <v-list-item prepend-icon="mdi mdi-logout" title="Logout" value="logout" @click.stop="logoutUser"></v-list-item>     
     </template>
 
   </v-navigation-drawer>

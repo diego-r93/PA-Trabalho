@@ -1,50 +1,83 @@
 <template>
   <v-container class="py-16 px-16" fluid>
-    <v-row>
-      <v-col v-for="user in users" :key="user.id" cols="4">
-        <v-card>
-          <v-list lines="two">
-            <v-list-subheader>{{ user.username }}</v-list-subheader>
+    <v-row justify="center">
+      <v-col cols="12" sm="8" md="6">
+        <form @submit.prevent="submit">
+          <v-text-field v-model="email.value.value" :error-messages="email.errorMessage.value"
+            label="E-mail" variant="solo" disabled></v-text-field>
 
-            <v-list-item>
-              <template v-slot:prepend>
-                <v-avatar color="grey-darken-1">{{ user.username[0] }}</v-avatar>
-              </template>
+          <v-text-field v-model="firstName.value.value" :counter="10" :error-messages="firstName.errorMessage.value"
+            label="First Name"></v-text-field>
 
-              <v-list-item-title>{{ user.email }}</v-list-item-title>
-              <v-divider></v-divider>
-              <v-list-item-title>Created: {{ formatDate(user.created) }}</v-list-item-title>
+          <v-text-field v-model="phone.value.value" :counter="7" :error-messages="phone.errorMessage.value"
+            label="Phone Number"></v-text-field>
 
-              <v-list-item-subtitle>
-                Preferred Languages: {{ user.preferredLanguages.join(', ') }}
-              </v-list-item-subtitle>
-            </v-list-item>
+          <v-select v-model="select.value.value" :items="items" :error-messages="select.errorMessage.value"
+            label="Select"></v-select>
 
-          </v-list>
-        </v-card>
+          <v-checkbox v-model="checkbox.value.value" :error-messages="checkbox.errorMessage.value" value="1"
+            label="Option" type="checkbox"></v-checkbox>
+
+          <v-btn class="me-4" type="submit">
+            submit
+          </v-btn>
+
+          <v-btn @click="handleReset">
+            clear
+          </v-btn>
+        </form>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
-<script>
-// import fireStoreDataService from "@/services/firestoreDataService"
+<script setup>
+import { ref } from 'vue'
+import { useField, useForm } from 'vee-validate'
 
-export default {
-  data() {
-    return {
-      users: [
-        { id: 1, username: 'john_doe', email: 'johndoe@example.com', created: '2022-01-15', preferredLanguages: ['JavaScript', 'Python'] },
-        { id: 2, username: 'jane_smith', email: 'janesmith@example.com', created: '2022-03-28', preferredLanguages: ['Java', 'C++'] },
-        { id: 3, username: 'bob_williams', email: 'bobwilliams@example.com', created: '2022-06-10', preferredLanguages: ['Ruby', 'Go'] },
-      ],
-    };
-  },
-  methods: {
-    formatDate(dateString) {
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      return new Date(dateString).toLocaleDateString(undefined, options);
+const { handleSubmit, handleReset } = useForm({
+  validationSchema: {
+    name(value) {
+      if (value?.length >= 2) return true
+
+      return 'Name needs to be at least 2 characters.'
+    },
+    phone(value) {
+      if (value?.length > 9 && /[0-9-]+/.test(value)) return true
+
+      return 'Phone number needs to be at least 9 digits.'
+    },
+    email(value) {
+      if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
+
+      return 'Must be a valid e-mail.'
+    },
+    select(value) {
+      if (value) return true
+
+      return 'Select an item.'
+    },
+    checkbox(value) {
+      if (value === '1') return true
+
+      return 'Must be checked.'
     },
   },
-};
+})
+const email = useField('email')
+const firstName = useField('firstName')
+const phone = useField('phone')
+const select = useField('select')
+const checkbox = useField('checkbox')
+
+const items = ref([
+  'Item 1',
+  'Item 2',
+  'Item 3',
+  'Item 4',
+])
+
+const submit = handleSubmit(values => {
+  alert(JSON.stringify(values, null, 2))
+})
 </script>

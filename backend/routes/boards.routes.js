@@ -24,5 +24,5 @@ module.exports = app => {
   // Delete all Tutorial
   router.delete("/", mongo.deleteAll)
 
-  app.use("/api/tutorials", router)
+  app.use("/api/boards", router)
 }

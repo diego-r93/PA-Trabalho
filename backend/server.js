@@ -43,9 +43,9 @@ app.get('/', (req, res, next) => {
 //   res.sendFile(path.resolve(__dirname, './dist/index.html'))
 // })
 
-require("./routes/mongo.routes")(app)
+require("./routes/boards.routes")(app)
 
-require("./routes/firestore.routes")(app)
+require("./routes/users.routes")(app)
 
 // Listen the server
 app.listen(port, host, () => {
