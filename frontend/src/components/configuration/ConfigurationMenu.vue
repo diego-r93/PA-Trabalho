@@ -38,6 +38,26 @@
           <v-list lines="three" select-strategy="classic">
             <v-list-subheader>General</v-list-subheader>
 
+            <v-list-item value="theme">
+              <v-btn prepend-icon="mdi-circle-half-full" variant="tonal"> 
+                Alterar Tema
+              </v-btn>            
+            </v-list-item>
+  
+            <v-list-item value="timezone">
+              <v-expansion-panels>
+                <v-expansion-panel-title> Timezone </v-expansion-panel-title>
+                  <v-select
+                    :items="locations"
+                    chips
+                    flat
+                    variant="solo">
+                  </v-select>
+              </v-expansion-panels>
+            </v-list-item>
+            
+
+
             <v-list-item value="notifications">
               <template v-slot:prepend="{ isActive }">
 
@@ -52,6 +72,7 @@
                 Notify me about updates to apps or games that I downloaded
               </v-list-item-subtitle>
             </v-list-item>
+
 
             <v-list-item value="sound">
               <template v-slot:prepend="{ isActive }">
@@ -87,6 +108,17 @@
   </v-container>
 </template>
 
-<script setup>
-  //
+
+<script>
+
+export default {
+  data: () => ({
+    locations: [
+      'zone 1',
+      'zone 2',
+      'zone 3',
+    ]
+  }),
+}
+
 </script>
