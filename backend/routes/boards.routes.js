@@ -1,28 +1,28 @@
 module.exports = app => {
-  const mongo = require("../database/mongodb/controllers/mongo.controller.js")
+  const board = require("../database/mongodb/controllers/board.controller.js")
 
   var router = require("express").Router()
 
   // Create a new Tutorial
-  router.post("/", mongo.create)
+  router.post("/", board.create)
 
   // Retrieve all Tutorials
-  router.get("/", mongo.findAll)
+  router.get("/", board.findAll)
 
   // Retrieve all published Tutorials
-  router.get("/published", mongo.findAllPublished)
+  router.get("/published", board.findAllPublished)
 
   // Retrieve a single Tutorial with id
-  router.get("/:id", mongo.findOne)
+  router.get("/:id", board.findOne)
 
   // Update a Tutorial with id
-  router.put("/:id", mongo.update)
+  router.put("/:id", board.update)
 
   // Delete a Tutorial with id
-  router.delete("/:id", mongo.delete)
+  router.delete("/:id", board.delete)
 
   // Delete all Tutorial
-  router.delete("/", mongo.deleteAll)
+  router.delete("/", board.deleteAll)
 
   app.use("/api/boards", router)
 }
