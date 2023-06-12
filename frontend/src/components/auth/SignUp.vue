@@ -6,7 +6,7 @@
           <v-img src="@/assets/images/hydroponic.png" class="mx-auto" :width="100" height="100" contain>
           </v-img>
           <v-card-title class="text-center py-12">
-            <h2 class="text-h4">Welcome</h2>
+            <h2 class="text-h4">Sign Up</h2>
           </v-card-title>
           <v-form v-model="form" @submit.prevent="onSubmit">
             <v-text-field v-model="email" :readonly="loading" :rules="[required]" class="mb-2" clearable
@@ -17,16 +17,11 @@
             <br>
             <v-btn :disabled="!form" :loading="loading" block color="indigo" size="large" type="submit"
               variant="elevated">
-              Log in
+              Sign Up
             </v-btn>
             <div class="text-center mt-2">
-              <v-btn to="/resetpassword" class="transparent-btn text-indigo" elevation="0">
-                <p class="text-capitalize">Forgot your password?</p>
-              </v-btn>
-            </div>
-            <div class="text-center mt-2">
-              <v-btn to="/signup" class="transparent-btn text-indigo" elevation="0">
-                <p class="text-capitalize">Don't have an account yet? Register</p>
+              <v-btn to="/login" class="transparent-btn text-indigo" elevation="0">
+                <p class="text-capitalize">Aleady have an account? Login</p>
               </v-btn>
             </div>
           </v-form>
@@ -38,19 +33,19 @@
 
 <script>
 import router from '@/router'
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
 import { isAuthenticated, login, logout } from '@/services/auth'
 
-import { useAuthStore } from '@/services/userConfiguration'
+import fireStoreDataService from "@/services/firestoreDataService"
 
 export default {
-  name: "SignIn",
+  name: 'SignUp',
   data() {
     return {
       show: false,
       form: false,
-      email: "",
-      password: "",
+      email: '',
+      password: '',
       loading: false,
     }
   },
@@ -73,62 +68,39 @@ export default {
         localStorage.removeItem('expiration')
       }
     }
-
-    // Pinia Configuration
-    const auth = getAuth()
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const userIdFromFirebase = user.email
-        const authStore = useAuthStore()
-        authStore.setUserId(userIdFromFirebase)
-      } 
-    })
   },
   methods: {
-    signin() {
+    signup() {
       const auth = getAuth();
-      signInWithEmailAndPassword(auth, this.email, this.password)
-        .then((userCredential) => {
-          console.log(userCredential);
-          this.loading = false;
-          login();
 
-          const user = userCredential.user;
-
-          // Pinia Configuration
-          const userIdFromFirebase = user.email
-          const authStore = useAuthStore()
-          authStore.setUserId(userIdFromFirebase)
-          
-
-          user.getIdToken()
-            .then((token) => {
-              const expiration = new Date().getTime() + 3600 * 1000;
-              localStorage.setItem('token', token);
-              localStorage.setItem('expiration', expiration);
-
-              router.push('/');
+      fireStoreDataService.create({ email: this.email })
+        .then(() => {
+          createUserWithEmailAndPassword(auth, this.email, this.password)
+            .then((userCredential) => {
+              const userId = this.email
+              fireStoreDataService.update(userId, JSON.stringify({mongo: `user-${userId}`}))
+              console.log(userCredential);
+              alert("Cadastro realizado com sucesso! Faça seu login.");
+              router.push('/login');
             })
             .catch((error) => {
-              console.log(error);
-              // Lida com erros ao obter o token
-            });
+              alert(error.message);
+              this.loading = false
+            })
         })
-        .catch((error) => {
-          console.log(error.code);
-          alert(error.message);
-          this.loading = false
-        });
+        .catch(e => {
+          console.log(e)
+        })
     },
     onSubmit() {
       if (!this.form) return
 
       this.loading = true
-      this.signin()
+      this.signup()
     },
     required(v) {
       return !!v || 'Field is required'
-    },
+    }
   }
 }
 </script>

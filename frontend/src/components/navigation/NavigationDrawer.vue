@@ -14,12 +14,11 @@
       </template>
     </v-list-item>
 
-
-    <template v-slot:append>
-      <v-list>
+    <template v-slot:append>      
+        <v-list-item prepend-icon="mdi-cog-outline" title="Configuration" value="configuration"
+          to="/configuration"></v-list-item>
         <v-list-item prepend-icon="mdi-help-circle-outline" title="Help" value="help" to="/help"></v-list-item>
-        <v-list-item prepend-icon="mdi mdi-logout" title="Logout" value="logout" @click.stop="logoutUser"></v-list-item>
-      </v-list>
+        <v-list-item prepend-icon="mdi mdi-logout" title="Logout" value="logout" @click.stop="logoutUser"></v-list-item>     
     </template>
 
   </v-navigation-drawer>
@@ -27,7 +26,7 @@
 
 <script>
 import router from '@/router'
-import { logout } from '@/scripts/auth.js'
+import { logout } from '@/services/auth'
 
 export default {
   data() {
@@ -38,8 +37,6 @@ export default {
         { title: 'Device configuration', icon: 'mdi-chip', value: "device", path: '/device' },
         { title: 'Database configuration', icon: 'mdi-database', value: "database", path: '/database' },
         { title: 'My Account', icon: 'mdi-account', value: "account", path: '/account' },
-        { title: 'Users', icon: 'mdi-account-group-outline', value: "users", path: '/users' },
-        { title: 'Configuration', icon: 'mdi-cog-outline', value: "configuration", path: '/configuration' },
       ],
       rail: true,
       selectedItem: 'dashboard',

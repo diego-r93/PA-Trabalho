@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { isAuthenticated } from '@/scripts/auth'
+import { isAuthenticated } from '@/services/auth'
 
 const routes = [
   {
@@ -38,15 +38,7 @@ const routes = [
       layout: "ui",
     },
     component: () => import("@/views/MyAccount.vue"),
-  },
-  {
-    path: "/users",
-    meta: {
-      requiresAuth: true,
-      layout: "ui",
-    },
-    component: () => import("@/views/UsersConfiguration.vue"),
-  },
+  }, 
   {
     path: "/configuration",
     meta: {
@@ -75,7 +67,14 @@ const routes = [
     meta: {
       layout: "auth",
     },
-    component: () => import("@/views/LoginPage.vue"),
+    component: () => import("@/views/SignUpPage.vue"),
+  },
+  {
+    path: '/resetpassword',
+    meta: {
+      layout: "auth",
+    },
+    component: () => import("@/views/SendPasswordResetEmail.vue"),
   },
 ]
 
