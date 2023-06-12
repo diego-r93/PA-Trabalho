@@ -1,5 +1,5 @@
 <template>
-  <v-app theme="dark">
+  <v-app :theme="theme">
     <component :is="currentLayout" v-if="isRouterLoaded">
       <router-view></router-view>
     </component>
@@ -13,7 +13,15 @@ import DefaultLayout from "@/layouts/DefaultLayout.vue"
 import AuthLayout from "@/layouts/AuthLayout.vue"
 import UserInterfaceLayout from "@/layouts/UserInterfaceLayout.vue"
 
+// Importado do Pinia
+import { useAuthStore } from '@/services/userConfiguration'
+
+// Importado do Pinia
+const authStore = useAuthStore()
+let theme = authStore.theme
+
 const route = useRoute();
+
 
 const isRouterLoaded = computed(() => {
   return route.name !== null ? true : false
