@@ -3,22 +3,18 @@
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
         <form @submit.prevent="submit">
-          <v-text-field v-model="email.value.value" :error-messages="email.errorMessage.value"
-            label="E-mail" variant="solo" disabled></v-text-field>
+          <v-text-field v-model="userId" label="E-mail" variant="solo" disabled></v-text-field>
 
-          <v-text-field v-model="firstName.value.value" :counter="10" :error-messages="firstName.errorMessage.value"
-            label="First Name"></v-text-field>
+          <v-text-field v-model="name.value.value" :counter="10" :error-messages="name.errorMessage.value"
+            label="Name"></v-text-field>
 
           <v-text-field v-model="phone.value.value" :counter="7" :error-messages="phone.errorMessage.value"
             label="Phone Number"></v-text-field>
 
-          <v-select v-model="select.value.value" :items="items" :error-messages="select.errorMessage.value"
-            label="Select"></v-select>
+          <v-select v-model="state.value.value" :items="items" :error-messages="state.errorMessage.value"
+            label="State/Province/Region"></v-select>
 
-          <v-checkbox v-model="checkbox.value.value" :error-messages="checkbox.errorMessage.value" value="1"
-            label="Option" type="checkbox"></v-checkbox>
-
-          <v-btn class="me-4" type="submit">
+          <v-btn class="me-4" type="submit" @click="submit">
             submit
           </v-btn>
 
@@ -35,6 +31,12 @@
 import { ref } from 'vue'
 import { useField, useForm } from 'vee-validate'
 
+import fireStoreDataService from '@/services/firestoreDataService'
+
+import { useAuthStore } from '@/services/userConfiguration'
+
+import { getAuth, onAuthStateChanged } from "firebase/auth"
+
 const { handleSubmit, handleReset } = useForm({
   validationSchema: {
     name(value) {
@@ -47,37 +49,67 @@ const { handleSubmit, handleReset } = useForm({
 
       return 'Phone number needs to be at least 9 digits.'
     },
-    email(value) {
-      if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
+    // email(value) {
+    //   if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
 
-      return 'Must be a valid e-mail.'
-    },
-    select(value) {
+    //   return 'Must be a valid e-mail.'
+    // },
+    state(value) {
       if (value) return true
 
       return 'Select an item.'
     },
-    checkbox(value) {
-      if (value === '1') return true
-
-      return 'Must be checked.'
-    },
   },
 })
-const email = useField('email')
-const firstName = useField('firstName')
+const name = useField('name')
 const phone = useField('phone')
-const select = useField('select')
-const checkbox = useField('checkbox')
+const state = useField('state')
 
 const items = ref([
-  'Item 1',
-  'Item 2',
-  'Item 3',
-  'Item 4',
+  'Acre (AC)',
+  'Alagoas (AL)',
+  'Amapá (AP)',
+  'Amazonas (AM)',
+  'Bahia (BA)',
+  'Ceará (CE)',
+  'Distrito Federal (DF)',
+  'Espírito Santo (ES)',
+  'Goiás (GO)',
+  'Maranhão (MA)',
+  'Mato Grosso (MT)',
+  'Mato Grosso do Sul (MS)',
+  'Minas Gerais (MG)',
+  'Pará (PA)',
+  'Paraíba (PB)',
+  'Paraná (PR)',
+  'Pernambuco (PE)',
+  'Piauí (PI)',
+  'Rio de Janeiro (RJ)',
+  'Rio Grande do Norte (RN)',
+  'Rio Grande do Sul (RS)',
+  'Rondônia (RO)',
+  'Roraima (RR)',
+  'Santa Catarina (SC)',
+  'São Paulo (SP)',
+  'Sergipe (SE)',
+  'Tocantins (TO)',
 ])
 
+// Pinia Configuration
+const auth = getAuth()
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    const userIdFromFirebase = user.email
+    const authStore = useAuthStore()
+    authStore.setUserId(userIdFromFirebase)
+  }
+})
+
+const authStore = useAuthStore()
+const userId = authStore.userId
+
 const submit = handleSubmit(values => {
+  fireStoreDataService.update(userId, values)
   alert(JSON.stringify(values, null, 2))
 })
 </script>

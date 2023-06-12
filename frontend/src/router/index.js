@@ -69,6 +69,13 @@ const routes = [
     },
     component: () => import("@/views/SignUpPage.vue"),
   },
+  {
+    path: '/resetpassword',
+    meta: {
+      layout: "auth",
+    },
+    component: () => import("@/views/SendPasswordResetEmail.vue"),
+  },
 ]
 
 const router = createRouter({

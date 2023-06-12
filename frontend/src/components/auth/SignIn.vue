@@ -20,7 +20,7 @@
               Log in
             </v-btn>
             <div class="text-center mt-2">
-              <v-btn class="transparent-btn text-indigo" elevation="0">
+              <v-btn to="/resetpassword" class="transparent-btn text-indigo" elevation="0">
                 <p class="text-capitalize">Forgot your password?</p>
               </v-btn>
             </div>
@@ -38,8 +38,10 @@
 
 <script>
 import router from '@/router'
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
 import { isAuthenticated, login, logout } from '@/services/auth'
+
+import { useAuthStore } from '@/services/userConfiguration'
 
 export default {
   name: "SignIn",
@@ -71,6 +73,16 @@ export default {
         localStorage.removeItem('expiration')
       }
     }
+
+    // Pinia Configuration
+    const auth = getAuth()
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userIdFromFirebase = user.email
+        const authStore = useAuthStore()
+        authStore.setUserId(userIdFromFirebase)
+      } 
+    })
   },
   methods: {
     signin() {
@@ -82,6 +94,13 @@ export default {
           login();
 
           const user = userCredential.user;
+
+          // Pinia Configuration
+          const userIdFromFirebase = user.email
+          const authStore = useAuthStore()
+          authStore.setUserId(userIdFromFirebase)
+          
+
           user.getIdToken()
             .then((token) => {
               const expiration = new Date().getTime() + 3600 * 1000;

@@ -44,9 +44,8 @@ export default {
     return {
       show: false,
       form: false,
-      email: "",
-      password: "",
-      id: "",
+      email: '',
+      password: '',
       loading: false,
     }
   },
@@ -75,11 +74,11 @@ export default {
       const auth = getAuth();
 
       fireStoreDataService.create({ email: this.email })
-        .then(response => {
-          this.id = response.data.id
-
+        .then(() => {
           createUserWithEmailAndPassword(auth, this.email, this.password)
             .then((userCredential) => {
+              const userId = this.email
+              fireStoreDataService.update(userId, JSON.stringify({mongo: `user-${userId}`}))
               console.log(userCredential);
               alert("Cadastro realizado com sucesso! Faça seu login.");
               router.push('/login');
