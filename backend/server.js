@@ -45,9 +45,16 @@ app.get('/', (req, res, next) => {
 //   res.sendFile(path.resolve(__dirname, './dist/index.html'))
 // })
 
+// MongoDB
 require("./routes/boards.routes")(app)
 
+// Firestore
 require("./routes/users.routes")(app)
+
+// MQTT
+require("./routes/publisher.routes")(app)
+
+require("./routes/subscriber.routes")(app)
 
 // Listen the server
 app.listen(port, host, () => {
