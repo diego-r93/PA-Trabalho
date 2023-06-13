@@ -88,8 +88,9 @@ export default {
               this.loading = false
             })
         })
-        .catch(e => {
-          console.log(e)
+        .catch(error => {
+          alert(error);
+          this.loading = false;
         })
     },
     onSubmit() {
