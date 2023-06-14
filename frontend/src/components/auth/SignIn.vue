@@ -40,7 +40,7 @@
 import router from '@/router'
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
 import { isAuthenticated, login, logout } from '@/services/auth'
-
+import UserService from '@/services/userService'
 import { useAuthStore } from '@/services/userConfiguration'
 
 export default {
@@ -57,6 +57,8 @@ export default {
   mounted() {
     const token = localStorage.getItem('token')
     const expiration = localStorage.getItem('expiration')
+    const user_id = localStorage.getItem('userId')
+
 
     if (token && expiration) {
       const currentTime = new Date().getTime()
@@ -71,6 +73,7 @@ export default {
         logout()
         localStorage.removeItem('token')
         localStorage.removeItem('expiration')
+        localStorage.removeItem('userId')
       }
     }
 
@@ -86,39 +89,67 @@ export default {
   },
   methods: {
     signin() {
-      const auth = getAuth();
-      signInWithEmailAndPassword(auth, this.email, this.password)
-        .then((userCredential) => {
-          console.log(userCredential);
-          this.loading = false;
-          login();
+      UserService.login({
+        email: this.email,
+        password: this.password,
+      }).then(res => {
+        this.loading = false;
+        login();
+        
+        const user = res.data;
 
-          const user = userCredential.user;
+        // Pinia Configuration
+        const userIdFromFirebase = user.email
+        const authStore = useAuthStore()
+        authStore.setUserId(userIdFromFirebase)
 
-          // Pinia Configuration
-          const userIdFromFirebase = user.email
-          const authStore = useAuthStore()
-          authStore.setUserId(userIdFromFirebase)
+
+        const expiration = new Date().getTime() + 3600 * 1000;
+        
+        localStorage.setItem('token', user.stsTokenManager.accessToken);
+        localStorage.setItem('expiration', expiration);
+        localStorage.setItem('userId', user.uid);
+
+        router.push('/');
+      })
+      .catch((error) => {
+        console.log(error.code);
+        alert(error.message);
+        this.loading = false
+      });
+      // const auth = getAuth();
+      // signInWithEmailAndPassword(auth, this.email, this.password)
+      //   .then((userCredential) => {
+      //     console.log(userCredential);
+      //     this.loading = false;
+      //     login();
+
+      //     const user = userCredential.user;
+
+      //     // Pinia Configuration
+      //     const userIdFromFirebase = user.email
+      //     const authStore = useAuthStore()
+      //     authStore.setUserId(userIdFromFirebase)
           
 
-          user.getIdToken()
-            .then((token) => {
-              const expiration = new Date().getTime() + 3600 * 1000;
-              localStorage.setItem('token', token);
-              localStorage.setItem('expiration', expiration);
+      //     user.getIdToken()
+      //       .then((token) => {
+      //         const expiration = new Date().getTime() + 3600 * 1000;
+      //         localStorage.setItem('token', token);
+      //         localStorage.setItem('expiration', expiration);
 
-              router.push('/');
-            })
-            .catch((error) => {
-              console.log(error);
-              // Lida com erros ao obter o token
-            });
-        })
-        .catch((error) => {
-          console.log(error.code);
-          alert(error.message);
-          this.loading = false
-        });
+      //         router.push('/');
+      //       })
+      //       .catch((error) => {
+      //         console.log(error);
+      //         // Lida com erros ao obter o token
+      //       });
+      //   })
+      //   .catch((error) => {
+      //     console.log(error.code);
+      //     alert(error.message);
+      //     this.loading = false
+      //   });
     },
     onSubmit() {
       if (!this.form) return

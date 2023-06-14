@@ -1,6 +1,6 @@
 import http from "./http-common"
 
-class FireStoreDataService {
+class UserService {
   getAll() {
     return http.get("/")
   }
@@ -13,6 +13,10 @@ class FireStoreDataService {
     return http.post("/", data)
   }
 
+  login(data) {
+    return http.post("/login", data)
+  }
+
   update(id, data) {
     return http.put(`/${id}`, data)
   }
@@ -22,4 +26,4 @@ class FireStoreDataService {
   }
 }
 
-export default new FireStoreDataService()
+export default new UserService()

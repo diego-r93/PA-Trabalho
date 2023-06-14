@@ -49,6 +49,7 @@ export default {
     logoutUser() {
       localStorage.removeItem('token')
       localStorage.removeItem('expiration')
+      localStorage.removeItem('userId')
       logout()
       router.push('/login')
     },
