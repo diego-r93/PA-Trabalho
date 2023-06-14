@@ -4,6 +4,7 @@ module.exports = mongoose => {
       email: String,
       firstName: String,
       lastName: String,
+      fbId: String,
     },
     { timestamps: true }
   );

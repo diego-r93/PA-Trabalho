@@ -1,33 +1,72 @@
 const db = require("../models");
 const User = db.user;
+const firebaseAuth = require("firebase/auth");
 
 // Create and Save a new user
 exports.create = (req, res) => {
   // Validate request
-  if ((!req.body.email) || (!req.body.firstName) || (!req.body.lastName))  {
+  if ((!req.body.email) || (!req.body.firstName) || (!req.body.lastName) || (!req.body.password))  {
     res.status(400).send({ message: "Content can not be empty!" });
     return;
   }
 
-  // Create a User
-  const user = new User({
-    email: req.body.email,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-  });
+  const auth = firebaseAuth.getAuth();
 
-  // Save User in the database
-  user
-    .save(user)
-    .then(data => {
-      res.send(data);
+  firebaseAuth.createUserWithEmailAndPassword(auth, req.body.email, req.body.password)
+    .then((userCredential) => {
+      // Create a User
+      const mongoUser = new User({
+        email: req.body.email,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        password: req.body.password,
+        fbId: userCredential.user.uid,
+      });
+
+      mongoUser.save(mongoUser).then(data => {
+          res.send(data);
+        })
+        .catch(err => {
+          console.log(err.message)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while creating the User."
+          });
+        });
     })
     .catch(err => {
+      console.log(err.message)
       res.status(500).send({
         message:
           err.message || "Some error occurred while creating the User."
       });
-    });
+    })
+};
+
+// Login user
+exports.login = (req, res) => {
+  // Validate request
+  if ((!req.body.email) || (!req.body.password))  {
+    res.status(400).send({ message: "Content can not be empty!" });
+    return;
+  }
+
+  // Login user with firebase
+  const auth = firebaseAuth.getAuth();
+    firebaseAuth.signInWithEmailAndPassword(auth, req.body.email, req.body.password)
+      .then((userCredential) => {
+        // verifica se existe o usuário na base de dados do mongo
+
+        res.status(200).send(userCredential.user);
+        return;
+      })
+      .catch(err => {
+        console.log(err.message)
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while creating the User."
+        });
+      });
 };
 
 // Retrieve all Users from the database.

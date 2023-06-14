@@ -6,6 +6,8 @@ module.exports = app => {
 
   router.post('/', users.create)
 
+  router.post('/login', users.login)
+
   router.get('/', users.findAll)
 
   router.get("/:id", users.findOne)
