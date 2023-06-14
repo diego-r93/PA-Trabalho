@@ -77,9 +77,9 @@ export default {
         .then(() => {
           createUserWithEmailAndPassword(auth, this.email, this.password)
             .then((userCredential) => {
-              const userId = this.email
-              fireStoreDataService.update(userId, JSON.stringify({mongo: `user-${userId}`}))
-              console.log(userCredential);
+              // const userId = this.email
+              // fireStoreDataService.update(userId, JSON.stringify({mongo: `user-${userId}`}))
+              // console.log(userCredential);
               alert("Cadastro realizado com sucesso! Faça seu login.");
               router.push('/login');
             })

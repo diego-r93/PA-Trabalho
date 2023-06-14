@@ -4,7 +4,7 @@ const User = db.user;
 // Create and Save a new user
 exports.create = (req, res) => {
   // Validate request
-  if ((!req.body.email) || (!req.body.firstName) || (!req.body.lastName))  {
+  if (!req.body)  {
     res.status(400).send({ message: "Content can not be empty!" });
     return;
   }
@@ -70,7 +70,7 @@ exports.update = (req, res) => {
   }
 
   const id = req.params.id;
-
+  console.log(req.body)
   User.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then(data => {
       if (!data) {
@@ -80,6 +80,7 @@ exports.update = (req, res) => {
       } else res.send({ message: "User was updated successfully." });
     })
     .catch(err => {
+      console.log(err)
       res.status(500).send({
         message: "Error updating User with id=" + id
       });
