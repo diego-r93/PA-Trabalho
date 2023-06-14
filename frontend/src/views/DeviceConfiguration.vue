@@ -1,7 +1,7 @@
 <template>
-  <DeviceCard />
+  <DeviceCardList />
 </template>
 
 <script setup>
-  import DeviceCard from '@/components/device/DeviceCard.vue'
+  import DeviceCardList from '@/components/device/DeviceCardList.vue'
 </script>
