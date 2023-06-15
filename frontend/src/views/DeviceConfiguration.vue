@@ -3,5 +3,5 @@
 </template>
 
 <script setup>
-  import DeviceCard from '@/components/device/DeviceCard.vue'
+  import DeviceCard from '@/components/device/DeviceCardList.vue'
 </script>

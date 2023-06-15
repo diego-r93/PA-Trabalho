@@ -52,9 +52,7 @@ require("./routes/boards.routes")(app)
 require("./routes/users.routes")(app)
 
 // MQTT
-require("./routes/publisher.routes")(app)
-
-require("./routes/subscriber.routes")(app)
+require("./routes/mqtt.routes")(app)
 
 // Listen the server
 app.listen(port, host, () => {
