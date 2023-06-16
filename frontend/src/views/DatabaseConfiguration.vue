@@ -1,7 +1,7 @@
 <template>
-  <DatabaseCard />
+  <DatabaseCardList/>
 </template>
 
 <script setup>
-  import DatabaseCard from '@/components/database/DatabaseCard.vue'
+  import DatabaseCardList from '@/components/database/DatabaseCardList.vue'
 </script>
