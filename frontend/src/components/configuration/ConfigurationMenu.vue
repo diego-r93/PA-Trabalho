@@ -43,21 +43,11 @@
                 Alterar Tema
               </v-btn>            
             </v-list-item>
-  
+
             <v-list-item value="timezone">
-              <v-expansion-panels>
-                <v-expansion-panel-title> Timezone </v-expansion-panel-title>
-                  <v-select
-                    :items="locations"
-                    chips
-                    flat
-                    variant="solo">
-                  </v-select>
-              </v-expansion-panels>
+              <v-select :items="locations"  label="Timezone"></v-select>
             </v-list-item>
-            
-
-
+  
             <v-list-item value="notifications">
               <template v-slot:prepend="{ isActive }">
 
@@ -114,9 +104,13 @@
 export default {
   data: () => ({
     locations: [
-      'zone 1',
-      'zone 2',
-      'zone 3',
+      'GMT-03:00',
+      'GMT-02:00',
+      'GMT-01:00',
+      'GMT+00:00',
+      'GMT+01:00',
+      'GMT+02:00',
+      'GMT+03:00',
     ]
   }),
 }
