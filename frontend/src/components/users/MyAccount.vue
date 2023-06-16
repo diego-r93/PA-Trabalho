@@ -31,7 +31,7 @@
 import { ref } from 'vue'
 import { useField, useForm } from 'vee-validate'
 
-import fireStoreDataService from '@/services/firestoreDataService'
+import UserService from '@/services/userService.js'
 
 import { useAuthStore } from '@/services/userConfiguration'
 
@@ -105,11 +105,13 @@ onAuthStateChanged(auth, (user) => {
   }
 })
 
-const authStore = useAuthStore()
-const userId = authStore.userId
+// const authStore = useAuthStore()
+// const userId = authStore.userId
+
+userId = localStorage.getItem('userId')
 
 const submit = handleSubmit(values => {
-  fireStoreDataService.update(userId, values)
+  UserService.update(userId, values)
   alert(JSON.stringify(values, null, 2))
 })
 </script>

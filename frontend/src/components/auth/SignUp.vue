@@ -11,6 +11,10 @@
           <v-form v-model="form" @submit.prevent="onSubmit">
             <v-text-field v-model="email" :readonly="loading" :rules="[required]" class="mb-2" clearable
               label="Email"></v-text-field>
+            <v-text-field v-model="firstName" :readonly="loading" :rules="[required]" class="mb-2" clearable
+              label="Nome"></v-text-field>
+            <v-text-field v-model="lastName" :readonly="loading" :rules="[required]" class="mb-2" clearable
+              label="Sobrenome"></v-text-field>
             <v-text-field v-model="password" :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'" :readonly="loading"
               :rules="[required]" :type="show ? 'text' : 'password'" clearable label="Password"
               @click:append-inner="show = !show"></v-text-field>
@@ -36,7 +40,7 @@ import router from '@/router'
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
 import { isAuthenticated, login, logout } from '@/services/auth'
 
-import fireStoreDataService from "@/services/firestoreDataService"
+import UserService from "@/services/userService.js"
 
 export default {
   name: 'SignUp',
@@ -45,6 +49,8 @@ export default {
       show: false,
       form: false,
       email: '',
+      firstName: '',
+      lastName: '',
       password: '',
       loading: false,
     }
@@ -52,6 +58,7 @@ export default {
   mounted() {
     const token = localStorage.getItem('token')
     const expiration = localStorage.getItem('expiration')
+    const user_id = localStorage.getItem('userId')
 
     if (token && expiration) {
       const currentTime = new Date().getTime()
@@ -66,32 +73,48 @@ export default {
         logout()
         localStorage.removeItem('token')
         localStorage.removeItem('expiration')
+        localStorage.removeItem('expiration')
       }
     }
   },
   methods: {
     signup() {
-      const auth = getAuth();
+      const userData = { 
+        email: this.email,
+        firstName: this.firstName,
+        lastName: this.lastName,
+        password: this.password,
+      }
+      UserService.create(userData)
+        .then((userCredential) => {
+            console.log(userCredential);
+            alert("Cadastro realizado com sucesso! Faça seu login.");
+            router.push('/login');
+          })
+          .catch((error) => {
+            alert(error.message);
+            this.loading = false
+          })
+      // const auth = getAuth();
 
-      fireStoreDataService.create({ email: this.email })
-        .then(() => {
-          createUserWithEmailAndPassword(auth, this.email, this.password)
-            .then((userCredential) => {
-              // const userId = this.email
-              // fireStoreDataService.update(userId, JSON.stringify({mongo: `user-${userId}`}))
-              // console.log(userCredential);
-              alert("Cadastro realizado com sucesso! Faça seu login.");
-              router.push('/login');
-            })
-            .catch((error) => {
-              alert(error.message);
-              this.loading = false
-            })
-        })
-        .catch(error => {
-          alert(error);
-          this.loading = false;
-        })
+      // fireStoreDataService.create({ email: this.email })
+      //   .then(() => {
+      //     createUserWithEmailAndPassword(auth, this.email, this.password)
+      //       .then((userCredential) => {
+      //         const userId = this.email
+      //         fireStoreDataService.update(userId, JSON.stringify({mongo: `user-${userId}`}))
+      //         console.log(userCredential);
+      //         alert("Cadastro realizado com sucesso! Faça seu login.");
+      //         router.push('/login');
+      //       })
+      //       .catch((error) => {
+      //         alert(error.message);
+      //         this.loading = false
+      //       })
+      //   })
+      //   .catch(e => {
+      //     console.log(e)
+      //   })
     },
     onSubmit() {
       if (!this.form) return

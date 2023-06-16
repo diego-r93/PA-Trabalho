@@ -1,4 +1,6 @@
 require('dotenv').config()
+const firebaseApp = require("firebase/app")
+
 
 const express = require('express')
 const app = express()
@@ -33,6 +35,10 @@ db.mongoose
     console.log("Cannot connect to the database!", err)
     process.exit()
   })
+
+const firebaseConfig = require("./config/firebase.config")
+
+firebaseApp.initializeApp(firebaseConfig)
 
 // Serve Vue.js as SPA in production
 app.use(express.static('dist'))
