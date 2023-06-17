@@ -1,6 +1,10 @@
+require('dotenv').config();
 const db = require("../models");
 const User = db.user;
 const firebaseAuth = require("firebase/auth");
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
 
 // Create and Save a new user
 exports.create = (req, res) => {
@@ -10,29 +14,17 @@ exports.create = (req, res) => {
     return;
   }
 
-  const auth = firebaseAuth.getAuth();
-
-  firebaseAuth.createUserWithEmailAndPassword(auth, req.body.email, req.body.password)
-    .then((userCredential) => {
-      // Create a User
-      const mongoUser = new User({
+  hashPassword(req.body.password).then(hashedPassword => {
+    const user = new User({
         email: req.body.email,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        password: req.body.password,
-        fbId: userCredential.user.uid,
+        password: hashedPassword,
       });
-
-      mongoUser.save(mongoUser).then(data => {
-          res.send(data);
-        })
-        .catch(err => {
-          console.log(err.message)
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while creating the User."
-          });
-        });
+  
+    user.save(user).then(data => {
+      delete data.password
+      res.send(data);
     })
     .catch(err => {
       console.log(err.message)
@@ -40,11 +32,49 @@ exports.create = (req, res) => {
         message:
           err.message || "Some error occurred while creating the User."
       });
-    })
+    });
+
+
+  }).catch(err => {
+    console.log(err.message);
+    res.status(500).send({ message: "Error hashing password" });
+  });
+
+  // const auth = firebaseAuth.getAuth();
+
+  // firebaseAuth.createUserWithEmailAndPassword(auth, req.body.email, req.body.password)
+  //   .then((userCredential) => {
+  //     // Create a User
+  //     const mongoUser = new User({
+  //       email: req.body.email,
+  //       firstName: req.body.firstName,
+  //       lastName: req.body.lastName,
+  //       password: req.body.password,
+  //       fbId: userCredential.user.uid,
+  //     });
+
+  //     mongoUser.save(mongoUser).then(data => {
+  //         res.send(data);
+  //       })
+  //       .catch(err => {
+  //         console.log(err.message)
+  //         res.status(500).send({
+  //           message:
+  //             err.message || "Some error occurred while creating the User."
+  //         });
+  //       });
+  //   })
+  //   .catch(err => {
+  //     console.log(err.message)
+  //     res.status(500).send({
+  //       message:
+  //         err.message || "Some error occurred while creating the User."
+  //     });
+  //   })
 };
 
-// Login user
-exports.login = (req, res) => {
+// Login user with firebase
+exports.loginWithFirebase = (req, res) => {
   // Validate request
   if ((!req.body.email) || (!req.body.password))  {
     res.status(400).send({ message: "Content can not be empty!" });
@@ -67,6 +97,44 @@ exports.login = (req, res) => {
             err.message || "Some error occurred while creating the User."
         });
       });
+};
+
+// Login user
+exports.login = (req, res) => {
+  // Validate request
+  if ((!req.body.email) || (!req.body.password))  {
+    res.status(400).send({ message: "Content can not be empty!" });
+    return;
+  }
+
+  const { email, password } = req.body
+
+  // Encontrar o usuário no banco de dados
+  User.findOne({ email: email })
+    .then(user => {
+      if (!user) {
+        return res.status(404).send({ message: 'User not found' });
+      }
+      
+      // Verificar a senha
+      bcrypt.compare(password, user.password, (err, result) => {
+        if (err || !result) {
+          return res.status(401).send({ message: 'Invalid password' });
+        }
+
+        const response = user.toObject()
+
+        // Gerar um token JWT
+        response.accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+        
+        delete response.password
+        // Enviar o token e outras informações do usuário como resposta
+        res.status(200).send(response);
+      });
+    })
+    .catch(err => {
+      res.status(500).send({ message: err.message || 'Error finding user' });
+    });
 };
 
 // Retrieve all Users from the database.
@@ -178,3 +246,16 @@ exports.findAllPublished = (req, res) => {
       });
     });
 };
+
+function hashPassword(password) {
+  return new Promise((resolve, reject) => {
+    bcrypt.hash(password, 10, (err, hashedPassword) => {
+      if (err) {
+        console.log(err.message)
+        reject(err);
+      } else {
+        resolve(hashedPassword);
+      }
+    });
+  });
+}
