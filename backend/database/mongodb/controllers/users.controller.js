@@ -177,7 +177,13 @@ exports.update = (req, res) => {
   }
 
   const id = req.params.id;
-  console.log(req.body)
+  console.log('------------------------')
+  console.log(req.userData)
+  console.log('------------------------')
+  if ((!req.userData._id) || (!id) || (id != req.userData._id)) {
+    return res.status(403).send({message: 'Forbidden'});
+  }
+
   User.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then(data => {
       if (!data) {
