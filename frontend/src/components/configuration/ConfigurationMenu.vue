@@ -39,9 +39,9 @@
             <v-list-subheader>General</v-list-subheader>
 
             <v-list-item value="theme">
-              <p>Tema atual: {{ theme }}</p>
+              <p>Current theme: {{ theme }}</p>
               <v-btn prepend-icon="mdi-circle-half-full" variant="tonal" @click="changeTheme"> 
-                Alterar Tema
+                Change Theme
               </v-btn>            
             </v-list-item>
 
@@ -100,6 +100,7 @@
 </template>
 
 
+
 <script>
 
 import { useAuthStore } from '@/services/userConfiguration'
@@ -135,7 +136,7 @@ export default {
       
       localStorage.setItem('theme', store.theme);
     }
-  }    
+  },    
 }
 
 </script>

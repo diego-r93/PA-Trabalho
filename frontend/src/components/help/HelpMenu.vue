@@ -3,7 +3,16 @@
     <v-row>
       <v-col cols="12">
         <div class="text-h4 mb-0">Tomatoes</div>
-        <div class="text-overline mb-1">version 1.0</div>
+        <div class="text-overline">version 1.0</div>
+      </v-col>
+
+      <v-col cols="12" >
+        <div class="text-h7">
+          Smart Greenhouse Control App. <br>
+          Functions: Monitoring, control, and management of greenhouse <br>
+          Temperature adjustment, humidity and irrigation control. <br>
+          Alert reception and remote access.<br>
+        </div>
       </v-col>
     </v-row>
 

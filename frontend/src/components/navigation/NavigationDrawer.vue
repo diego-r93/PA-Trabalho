@@ -17,8 +17,24 @@
     <template v-slot:append>      
         <v-list-item prepend-icon="mdi-cog-outline" title="Configuration" value="configuration"
           to="/configuration"></v-list-item>
-        <v-list-item prepend-icon="mdi-help-circle-outline" title="Help" value="help" to="/help"></v-list-item>
-        <v-list-item prepend-icon="mdi mdi-logout" title="Logout" value="logout" @click.stop="logoutUser"></v-list-item>     
+
+        <v-menu open-on-hover location="end">
+          <template v-slot:activator="{ props }">
+            <v-list-item prepend-icon="mdi-help-circle-outline" title="Help" value="help" to="/help" v-bind="props">
+            </v-list-item>
+          </template>
+          <v-list>
+            <v-list-item v-for="(item, index) in itemsHelp" :key="index">
+              <a :href="item.url" target="_blank">
+                <v-btn :prepend-icon=item.icon> {{ item.title }} 
+                </v-btn>
+              </a>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        
+        <v-list-item prepend-icon="mdi mdi-logout" title="Logout" value="logout" 
+          @click.stop="logoutUser"></v-list-item>     
     </template>
 
   </v-navigation-drawer>
@@ -38,6 +54,13 @@ export default {
         { title: 'Database configuration', icon: 'mdi-database', value: "database", path: '/database' },
         { title: 'My Account', icon: 'mdi-account', value: "account", path: '/account' },
       ],
+
+      itemsHelp: [
+        { title: 'Vue.js', icon: 'mdi-open-in-new', url: 'https://vuejs.org/' },
+        { title: 'Vuetify', icon: 'mdi-open-in-new', url: 'https://vuetifyjs.com/' },
+        { title: 'Documentation', icon: 'mdi-open-in-new', url: 'https://github.com/diego-r93/pa-trabalho1' },
+      ],
+
       rail: true,
       selectedItem: 'dashboard',
     }
@@ -53,6 +76,7 @@ export default {
       logout()
       router.push('/login')
     },
+
   },
 }
 </script>
