@@ -39,7 +39,8 @@
             <v-list-subheader>General</v-list-subheader>
 
             <v-list-item value="theme">
-              <v-btn prepend-icon="mdi-circle-half-full" variant="tonal"> 
+              <p>Tema atual: {{ theme }}</p>
+              <v-btn prepend-icon="mdi-circle-half-full" variant="tonal" @click="changeTheme"> 
                 Alterar Tema
               </v-btn>            
             </v-list-item>
@@ -101,6 +102,8 @@
 
 <script>
 
+import { useAuthStore } from '@/services/userConfiguration'
+
 export default {
   data: () => ({
     locations: [
@@ -111,8 +114,28 @@ export default {
       'GMT+01:00',
       'GMT+02:00',
       'GMT+03:00',
-    ]
+    ]  
   }),
+
+  // data: () => {
+  //   return {
+  //     theme: ''
+  //   };
+  // },
+  computed: {
+    theme() {
+      //this.theme=useAuthStore().theme;
+      return useAuthStore().theme;
+    }
+  },
+  methods: {
+    changeTheme() {
+      const store = useAuthStore();
+      store.theme = store.theme === 'dark' ? 'light' : 'dark';
+      
+      localStorage.setItem('theme', store.theme);
+    }
+  }    
 }
 
 </script>
