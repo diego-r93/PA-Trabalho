@@ -5,11 +5,14 @@
         <form @submit.prevent="submit">
           <v-text-field v-model="userId" label="E-mail" variant="solo" disabled></v-text-field>
 
-          <v-text-field v-model="name.value.value" :counter="10" :error-messages="name.errorMessage.value"
-            label="Name"></v-text-field>
+          <v-text-field v-model="firstName.value.value" :counter="10" :error-messages="firstName.errorMessage.value"
+            label="Nome"></v-text-field>
+
+          <v-text-field v-model="lastName.value.value" :counter="10" :error-messages="lastName.errorMessage.value"
+            label="Sobrenome"></v-text-field>
 
           <v-text-field v-model="phone.value.value" :counter="7" :error-messages="phone.errorMessage.value"
-            label="Phone Number"></v-text-field>
+            label="Telefone"></v-text-field>
 
           <v-select v-model="state.value.value" :items="items" :error-messages="state.errorMessage.value"
             label="State/Province/Region"></v-select>
@@ -39,10 +42,15 @@ import { getAuth, onAuthStateChanged } from "firebase/auth"
 
 const { handleSubmit, handleReset } = useForm({
   validationSchema: {
-    name(value) {
+    firstName(value) {
       if (value?.length >= 2) return true
 
-      return 'Name needs to be at least 2 characters.'
+      return 'First Name needs to be at least 2 characters.'
+    },
+    lastName(value) {
+      if (value?.length >= 2) return true
+
+      return 'Last Name needs to be at least 2 characters.'
     },
     phone(value) {
       if (value?.length > 9 && /[0-9-]+/.test(value)) return true
@@ -61,7 +69,8 @@ const { handleSubmit, handleReset } = useForm({
     },
   },
 })
-const name = useField('name')
+const firstName = useField('firstName')
+const lastName = useField('lastName')
 const phone = useField('phone')
 const state = useField('state')
 
@@ -108,10 +117,11 @@ onAuthStateChanged(auth, (user) => {
 // const authStore = useAuthStore()
 // const userId = authStore.userId
 
-userId = localStorage.getItem('userId')
+const userId = localStorage.getItem('userId')
+const accessToken = localStorage.getItem('accessToken')
 
 const submit = handleSubmit(values => {
-  UserService.update(userId, values)
+  UserService.update(userId, values, accessToken)
   alert(JSON.stringify(values, null, 2))
 })
 </script>

@@ -116,13 +116,13 @@
             pumperName: this.pumperName,
             pulseDuration: this.pulseDuration,
             driveTimes: this.driveTimes
-          }).then((response) => {
+          }, localStorage.accessToken).then((response) => {
             alert("Board successfuly updated!")
             window.location.reload()
           })
         },
         deleteBoard() {
-          mongoDataService.deleteBoard(this.cardData.id).then((response) => {
+          mongoDataService.deleteBoard(this.cardData.id, localStorage.accessToken).then((response) => {
             alert("Board successfully deleted!")
             window.location.reload();
           })
