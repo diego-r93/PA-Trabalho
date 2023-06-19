@@ -3,37 +3,10 @@
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
         <v-card class="mx-auto" max-width="600">
-          <v-toolbar color="indigo">
-            <v-btn icon="mdi-menu"></v-btn>
-
+          <v-toolbar color="dark">
             <v-toolbar-title>Settings</v-toolbar-title>
-
             <v-spacer></v-spacer>
-
-            <v-btn icon="mdi-magnify"></v-btn>
           </v-toolbar>
-
-          <v-list lines="three">
-            <v-list-subheader>User Controls</v-list-subheader>
-
-            <v-list-item>
-              <v-list-item-title>Content filtering</v-list-item-title>
-
-              <v-list-item-subtitle>
-                Set the content filtering level to restrict appts that can be downloaded
-              </v-list-item-subtitle>
-            </v-list-item>
-
-            <v-list-item>
-              <v-list-item-title>Password</v-list-item-title>
-
-              <v-list-item-subtitle>
-                Require password for purchase or use password to restrict purchase
-              </v-list-item-subtitle>
-            </v-list-item>
-          </v-list>
-
-          <v-divider></v-divider>
 
           <v-list lines="three" select-strategy="classic">
             <v-list-subheader>General</v-list-subheader>
@@ -49,7 +22,7 @@
               <v-select :items="locations"  label="Timezone"></v-select>
             </v-list-item>
   
-            <v-list-item value="notifications">
+            <v-list-item value="sidebar">
               <template v-slot:prepend="{ isActive }">
 
                 <v-list-item-action start>
@@ -57,13 +30,12 @@
                 </v-list-item-action>
               </template>
 
-              <v-list-item-title>Notifications</v-list-item-title>
+              <v-list-item-title>Hide sidebar</v-list-item-title>
 
               <v-list-item-subtitle>
-                Notify me about updates to apps or games that I downloaded
+                Hide or show items on sidebar menu 
               </v-list-item-subtitle>
             </v-list-item>
-
 
             <v-list-item value="sound">
               <template v-slot:prepend="{ isActive }">
@@ -72,24 +44,10 @@
                 </v-list-item-action>
               </template>
 
-              <v-list-item-title>Sound</v-list-item-title>
+              <v-list-item-title>Sound On</v-list-item-title>
 
               <v-list-item-subtitle>
-                Auto-update apps at any time. Data charges may apply
-              </v-list-item-subtitle>
-            </v-list-item>
-
-            <v-list-item value="widgets">
-              <template v-slot:prepend="{ isActive }">
-                <v-list-item-action start>
-                  <v-checkbox-btn :model-value="isActive"></v-checkbox-btn>
-                </v-list-item-action>
-              </template>
-
-              <v-list-item-title>Auto-add widgets</v-list-item-title>
-
-              <v-list-item-subtitle>
-                Automatically add home screen widgets when downloads complete
+                Turn on/off sound effects in application
               </v-list-item-subtitle>
             </v-list-item>
           </v-list>
@@ -100,9 +58,7 @@
 </template>
 
 
-
 <script>
-
 import { useAuthStore } from '@/services/userConfiguration'
 
 export default {
@@ -117,26 +73,17 @@ export default {
       'GMT+03:00',
     ]  
   }),
-
-  // data: () => {
-  //   return {
-  //     theme: ''
-  //   };
-  // },
   computed: {
     theme() {
-      //this.theme=useAuthStore().theme;
       return useAuthStore().theme;
     }
   },
   methods: {
     changeTheme() {
       const store = useAuthStore();
-      store.theme = store.theme === 'dark' ? 'light' : 'dark';
-      
+      store.theme = store.theme === 'dark' ? 'light' : 'dark';     
       localStorage.setItem('theme', store.theme);
     }
   },    
 }
-
 </script>
