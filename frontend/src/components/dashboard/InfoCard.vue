@@ -191,11 +191,6 @@
           </v-card-actions>
         </v-card>
       </v-col>
-
-
-
-     
-
     </v-row>
   </v-container>
 </template>
@@ -203,9 +198,6 @@
 
 
 <script>
-
-
-
 export default {
   
   data: () => ({
@@ -233,7 +225,5 @@ export default {
       { day: 'Thursday', icon: 'mdi-cloud', temp: '25\xB0/15\xB0' },
     ],
   }),
-
-
 }
 </script>
