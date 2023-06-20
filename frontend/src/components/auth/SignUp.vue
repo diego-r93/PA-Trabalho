@@ -73,7 +73,8 @@ export default {
         logout()
         localStorage.removeItem('accessToken')
         localStorage.removeItem('expiration')
-        localStorage.removeItem('expiration')
+        localStorage.removeItem('userId')
+        localStorage.removeItem('userData')
       }
     }
   },

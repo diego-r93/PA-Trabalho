@@ -76,6 +76,7 @@ export default {
       localStorage.removeItem('accessToken')
       localStorage.removeItem('expiration')
       localStorage.removeItem('userId')
+      localStorage.removeItem('userData')
       logout()
       router.push('/login')
     },

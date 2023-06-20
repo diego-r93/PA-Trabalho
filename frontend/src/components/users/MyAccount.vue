@@ -5,7 +5,7 @@
         <form @submit.prevent="submit">
           <!-- <v-text-field v-model="userId" label="E-mail" variant="solo" disabled></v-text-field> -->
           
-          <v-text-field v-model="email.value.value" label="E-mail" variant="solo" :error-messages="email.errorMessage.value"></v-text-field>
+          <v-text-field v-model="userData.email" label="E-mail" variant="solo" disabled></v-text-field>
 
           <v-text-field v-model="firstName.value.value" :counter="10" :error-messages="firstName.errorMessage.value"
             label="Nome"></v-text-field>
@@ -121,6 +121,7 @@ onAuthStateChanged(auth, (user) => {
 // const userId = authStore.userId
 
 const userId = localStorage.getItem('userId')
+const userData = JSON.parse(localStorage.getItem('userData'))
 const accessToken = localStorage.getItem('accessToken')
 
 const submit = handleSubmit(values => {

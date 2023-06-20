@@ -40,37 +40,6 @@ exports.create = (req, res) => {
     res.status(500).send({ message: "Error hashing password" });
   });
 
-  // const auth = firebaseAuth.getAuth();
-
-  // firebaseAuth.createUserWithEmailAndPassword(auth, req.body.email, req.body.password)
-  //   .then((userCredential) => {
-  //     // Create a User
-  //     const mongoUser = new User({
-  //       email: req.body.email,
-  //       firstName: req.body.firstName,
-  //       lastName: req.body.lastName,
-  //       password: req.body.password,
-  //       fbId: userCredential.user.uid,
-  //     });
-
-  //     mongoUser.save(mongoUser).then(data => {
-  //         res.send(data);
-  //       })
-  //       .catch(err => {
-  //         console.log(err.message)
-  //         res.status(500).send({
-  //           message:
-  //             err.message || "Some error occurred while creating the User."
-  //         });
-  //       });
-  //   })
-  //   .catch(err => {
-  //     console.log(err.message)
-  //     res.status(500).send({
-  //       message:
-  //         err.message || "Some error occurred while creating the User."
-  //     });
-  //   })
 };
 
 // Create and Save a new user in firebase and mongo
@@ -256,7 +225,8 @@ exports.update = (req, res) => {
         res.status(404).send({
           message: `Cannot update User with id=${id}. Maybe User was not found!`
         });
-      } else res.send({ message: "User was updated successfully." });
+      } else {
+        res.send({ message: "User was updated successfully.", data: data});}
     })
     .catch(err => {
       console.log(err)

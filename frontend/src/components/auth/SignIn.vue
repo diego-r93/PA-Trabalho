@@ -74,6 +74,7 @@ export default {
         localStorage.removeItem('accessToken')
         localStorage.removeItem('expiration')
         localStorage.removeItem('userId')
+        localStorage.removeItem('userData')
       }
     }
 
@@ -109,6 +110,13 @@ export default {
         localStorage.setItem('accessToken', user.accessToken);
         localStorage.setItem('expiration', expiration);
         localStorage.setItem('userId', user._id);
+        localStorage.setItem('userData', JSON.stringify({
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          phone: user.phone,
+          state: user.state,
+        }));
 
         router.push('/');
       })
