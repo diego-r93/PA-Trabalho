@@ -1,28 +1,26 @@
 module.exports = app => {
   const board = require("../database/mongodb/controllers/board.controller.js")
+  const { verifyToken } = require('../database/mongodb/controllers/token.controller.js'); //Mudar local
 
   var router = require("express").Router()
 
-  // Create a new Tutorial
-  router.post("/", board.create)
+  // Create a new Board
+  router.post("/", verifyToken, board.create)
 
-  // Retrieve all Tutorials
-  router.get("/", board.findAll)
+  // Retrieve all Boards
+  router.get("/", verifyToken, board.findAll)
 
-  // Retrieve all published Tutorials
-  router.get("/published", board.findAllPublished)
+  // Retrieve a single Board with id
+  router.get("/:id", verifyToken, board.findOne)
 
-  // Retrieve a single Tutorial with id
-  router.get("/:id", board.findOne)
+  // Update a Board with id
+  router.put("/:id", verifyToken, board.update)
 
-  // Update a Tutorial with id
-  router.put("/:id", board.update)
+  // Delete a Board with id
+  router.delete("/:id", verifyToken, board.delete)
 
-  // Delete a Tutorial with id
-  router.delete("/:id", board.delete)
-
-  // Delete all Tutorial
-  router.delete("/", board.deleteAll)
+  // Delete all Board
+  // router.delete("/", verifyToken, board.deleteAll)
 
   app.use("/api/boards", router)
 }

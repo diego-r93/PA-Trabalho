@@ -2,7 +2,7 @@ let authenticated = false
 
 export function isAuthenticated() {
 
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('accessToken')
   const expiration = localStorage.getItem('expiration')
   const currentTime = new Date().getTime()
 

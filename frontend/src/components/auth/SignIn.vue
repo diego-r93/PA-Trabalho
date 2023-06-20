@@ -55,7 +55,7 @@ export default {
     }
   },
   mounted() {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('accessToken')
     const expiration = localStorage.getItem('expiration')
     const user_id = localStorage.getItem('userId')
 
@@ -71,9 +71,10 @@ export default {
         router.push('/')
       } else {
         logout()
-        localStorage.removeItem('token')
+        localStorage.removeItem('accessToken')
         localStorage.removeItem('expiration')
         localStorage.removeItem('userId')
+        localStorage.removeItem('userData')
       }
     }
 
@@ -106,9 +107,16 @@ export default {
 
         const expiration = new Date().getTime() + 3600 * 1000;
         
-        localStorage.setItem('token', user.stsTokenManager.accessToken);
+        localStorage.setItem('accessToken', user.accessToken);
         localStorage.setItem('expiration', expiration);
-        localStorage.setItem('userId', user.uid);
+        localStorage.setItem('userId', user._id);
+        localStorage.setItem('userData', JSON.stringify({
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          phone: user.phone,
+          state: user.state,
+        }));
 
         router.push('/');
       })

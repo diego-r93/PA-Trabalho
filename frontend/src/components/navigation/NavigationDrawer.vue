@@ -73,9 +73,10 @@ export default {
       this.selectedItem = itemValue
     },
     logoutUser() {
-      localStorage.removeItem('token')
+      localStorage.removeItem('accessToken')
       localStorage.removeItem('expiration')
       localStorage.removeItem('userId')
+      localStorage.removeItem('userData')
       logout()
       router.push('/login')
     },

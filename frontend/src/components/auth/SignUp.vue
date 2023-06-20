@@ -56,7 +56,7 @@ export default {
     }
   },
   mounted() {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('accessToken')
     const expiration = localStorage.getItem('expiration')
     const user_id = localStorage.getItem('userId')
 
@@ -71,9 +71,10 @@ export default {
         router.push('/')
       } else {
         logout()
-        localStorage.removeItem('token')
+        localStorage.removeItem('accessToken')
         localStorage.removeItem('expiration')
-        localStorage.removeItem('expiration')
+        localStorage.removeItem('userId')
+        localStorage.removeItem('userData')
       }
     }
   },

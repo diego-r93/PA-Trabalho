@@ -5,6 +5,10 @@ module.exports = mongoose => {
       pumperName: String,
       pulseDuration: Number,
       driveTimes: Array,
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      }
     },
     { timestamps: true }
   );

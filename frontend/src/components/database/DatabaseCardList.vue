@@ -102,24 +102,20 @@ export default {
         pumperName: this.pumperName,
         pulseDuration: this.pulseDuration,
         driveTimes: this.driveTimes,
-      }).then(response => {
+      }, localStorage.accessToken).then(() => {
         alert("Nova placa adicionada com sucesso!")
         this.loading = false
         window.location.reload()
       })
     },
-    addDriveTime() {
-      this.driveTimes.push({
-        time: "",
-        state: false,
-      });
-      console.log(this.driveTimes)
-    },
-    removeDriveTime() {
-      this.driveTimes.pop()
-    },
-    required(v) {
-      return !!v || 'Field is required'
+    created() {
+      try {
+        mongoDataService.getAllBoards(localStorage.accessToken).then((response) => {
+          this.devices = response.data
+        })
+      } catch (error) {
+        alert(error)
+      }
     }
   },
   created() {

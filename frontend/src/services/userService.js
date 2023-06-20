@@ -1,28 +1,30 @@
-import http from "./http-common"
+import { http, httpWithAuthorization, setAuthorizationHeader } from "./http-common"
 
 class UserService {
   getAll() {
-    return http.get("/users")
+    return http.get("/api/users")
   }
 
-  get(id) {
-    return http.get(`/users/${id}`)
+  get(id, token) {
+    setAuthorizationHeader(token)
+    return httpWithAuthorization.get(`/api/users/${id}`)
   }
 
   create(data) {
-    return http.post("/users", data)
+    return http.post("/api/users", data)
   }
 
   login(data) {
-    return http.post("users/login", data)
+    return http.post("/api/users/login", data)
   }
 
-  update(id, data) {
-    return http.put(`/users/${id}`, data)
+  update(id, data, token) {
+    setAuthorizationHeader(token)
+    return httpWithAuthorization.put(`/api/users/${id}`, data)
   }
 
   delete(id) {
-    return http.delete(`/users/${id}`)
+    return http.delete(`/api/users/${id}`)
   }
 }
 

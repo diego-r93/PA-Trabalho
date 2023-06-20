@@ -15,6 +15,7 @@ exports.create = (req, res) => {
     pumperName: req.body.pumperName,
     pulseDuration: req.body.pulseDuration,
     driveTimes: req.body.driveTimes,
+    user: req.userData._id,
   });
 
   // Save Board in the database
@@ -33,10 +34,11 @@ exports.create = (req, res) => {
 
 // Retrieve all Boards from the database.
 exports.findAll = (req, res) => {
-  const title = req.query.title;
-  var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
+  let filter = {
+    user: req.userData._id
+  }
 
-  Board.find(condition)
+  Board.find(filter)
     .then(data => {
       res.send(data);
     })
@@ -51,8 +53,12 @@ exports.findAll = (req, res) => {
 // Find a single Board with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
-
-  Board.findById(id)
+  const userId = req.userData._id;
+  
+  Board.findOne({
+    _id: id,
+    user: userId,
+  })
     .then(data => {
       if (!data)
         res.status(404).send({ message: `Not found Board with id ${id}` });
@@ -61,7 +67,7 @@ exports.findOne = (req, res) => {
     .catch(err => {
       res
         .status(500)
-        .send({ message: "Error retrieving Board with id=" + id });
+        .send({ message: `Error retrieving Board with id=${id}` });
     });
 };
 
@@ -74,8 +80,12 @@ exports.update = (req, res) => {
   }
 
   const id = req.params.id;
+  const userId = req.userData._id;
 
-  Board.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+  Board.findOneAndUpdate({
+    _id: id,
+    user: userId,
+  }, req.body, { useFindAndModify: false })
     .then(data => {
       if (!data) {
         res.status(404).send({
@@ -93,8 +103,12 @@ exports.update = (req, res) => {
 // Delete a Board with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
+  const userId = req.userData._id;
 
-  Board.findByIdAndRemove(id, { useFindAndModify: false })
+  Board.findOneAndRemove({
+    _id: id,
+    user: userId,
+  }, { useFindAndModify: false })
     .then(data => {
       if (!data) {
         res.status(404).send({
@@ -129,16 +143,3 @@ exports.deleteAll = (req, res) => {
     });
 };
 
-// Find all published Boards
-exports.findAllPublished = (req, res) => {
-  Board.find()
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving boards."
-      });
-    });
-};

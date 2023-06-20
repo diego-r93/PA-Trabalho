@@ -118,16 +118,42 @@ export default {
         pumperName: this.pumperName,
         pulseDuration: this.pulseDuration,
         driveTimes: this.driveTimes
-      }).then((response) => {
+      }).then(() => {
         alert("Board successfuly updated!")
         window.location.reload()
       })
     },
-    deleteBoard() {
-      mongoDataService.deleteBoard(this.cardData.id).then((response) => {
-        alert("Board successfully deleted!")
-        window.location.reload();
-      })
+    methods: {
+        editBoard() {
+          mongoDataService.updateBoard(this.cardData.id, {
+            pumperCode: this.pumperCode,
+            pumperName: this.pumperName,
+            pulseDuration: this.pulseDuration,
+            driveTimes: this.driveTimes
+          }, localStorage.accessToken).then(() => {
+            alert("Board successfuly updated!")
+            window.location.reload()
+          })
+        },
+        deleteBoard() {
+          mongoDataService.deleteBoard(this.cardData.id, localStorage.accessToken).then(() => {
+            alert("Board successfully deleted!")
+            window.location.reload();
+          })
+        },
+        addDriveTime() {
+          this.driveTimes.push({
+            time: "",
+            state: false,
+          });
+          console.log(this.driveTimes)
+        },
+        removeDriveTime() {
+          this.driveTimes.pop()
+        },
+        required(v) {
+          return !!v || 'Field is required'
+        }
     },
     addDriveTime() {
       this.driveTimes.push({
