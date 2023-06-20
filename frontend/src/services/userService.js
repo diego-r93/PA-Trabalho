@@ -2,29 +2,29 @@ import { http, httpWithAuthorization, setAuthorizationHeader } from "./http-comm
 
 class UserService {
   getAll() {
-    return http.get("/users")
+    return http.get("/api/users")
   }
 
   get(id, token) {
     setAuthorizationHeader(token)
-    return httpWithAuthorization.get(`/users/${id}`)
+    return httpWithAuthorization.get(`/api/users/${id}`)
   }
 
   create(data) {
-    return http.post("/users", data)
+    return http.post("/api/users", data)
   }
 
   login(data) {
-    return http.post("users/login", data)
+    return http.post("/api/users/login", data)
   }
 
   update(id, data, token) {
     setAuthorizationHeader(token)
-    return httpWithAuthorization.put(`/users/${id}`, data)
+    return httpWithAuthorization.put(`/api/users/${id}`, data)
   }
 
   delete(id) {
-    return http.delete(`/users/${id}`)
+    return http.delete(`/api/users/${id}`)
   }
 }
 

@@ -73,6 +73,58 @@ exports.create = (req, res) => {
   //   })
 };
 
+// Create and Save a new user in firebase and mongo
+exports.createWithFirebaseAndMongo = (req, res) => {
+  // Validate request
+  if ((!req.body.email) || (!req.body.firstName) || (!req.body.lastName) || (!req.body.password))  {
+    res.status(400).send({ message: "Content can not be empty!" });
+    return;
+  }
+
+  const auth = firebaseAuth.getAuth();
+
+  hashPassword(req.body.password).then(hashedPassword => {
+
+  firebaseAuth.createUserWithEmailAndPassword(auth, req.body.email, req.body.password)
+    .then((userCredential) => {
+      // Create a User
+      const mongoUser = new User({
+        email: req.body.email,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        phone: '',
+        state: '',
+        password: hashedPassword,
+        fbId: userCredential.user.uid,
+      });
+
+      mongoUser.save(mongoUser).then(data => {
+          delete data.password;
+          res.send(data);
+        })
+        .catch(err => {
+          console.log(err.message)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while creating the User."
+          });
+        });
+    })
+    .catch(err => {
+      console.log(err.message)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the User."
+      });
+    })
+
+  }).catch(err => {
+    console.log(err.message);
+    res.status(500).send({ message: "Error hashing password" });
+  });
+};
+
+
 // Login user with firebase
 exports.loginWithFirebase = (req, res) => {
   // Validate request
@@ -85,10 +137,24 @@ exports.loginWithFirebase = (req, res) => {
   const auth = firebaseAuth.getAuth();
     firebaseAuth.signInWithEmailAndPassword(auth, req.body.email, req.body.password)
       .then((userCredential) => {
-        // verifica se existe o usuário na base de dados do mongo
+        // Encontrar o usuário no banco de dados do mongo
+        User.findOne({ email: req.body.email })
+        .then(mongoUser => {
+          if (!mongoUser) {
+            return res.status(404).send({ message: 'User not found' });
+          }
+          const response = mongoUser.toObject()
 
-        res.status(200).send(userCredential.user);
-        return;
+          // Gerar um token JWT
+          response.accessToken = jwt.sign({ userId: mongoUser._id }, process.env.JWT_SECRET);
+          
+          delete response.password
+          // Enviar o token e outras informações do usuário como resposta
+          res.status(200).send(response);
+        })
+        .catch(err => {
+          res.status(500).send({ message: err.message || 'Error finding user' });
+        });
       })
       .catch(err => {
         console.log(err.message)

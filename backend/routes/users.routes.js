@@ -5,9 +5,9 @@ module.exports = app => {
 
   var router = require("express").Router()
 
-  router.post('/', users.create)
+  router.post('/', users.createWithFirebaseAndMongo)
 
-  router.post('/login', users.login)
+  router.post('/login', users.loginWithFirebase)
 
   router.get('/', users.findAll)
 
@@ -17,5 +17,5 @@ module.exports = app => {
 
   // router.delete("/:id", users.delete)
 
-  app.use("/users", router)
+  app.use("/api/users", router)
 }

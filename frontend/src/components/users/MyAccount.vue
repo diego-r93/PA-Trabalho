@@ -3,7 +3,9 @@
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
         <form @submit.prevent="submit">
-          <v-text-field v-model="userId" label="E-mail" variant="solo" disabled></v-text-field>
+          <!-- <v-text-field v-model="userId" label="E-mail" variant="solo" disabled></v-text-field> -->
+          
+          <v-text-field v-model="email.value.value" label="E-mail" variant="solo" :error-messages="email.errorMessage.value"></v-text-field>
 
           <v-text-field v-model="firstName.value.value" :counter="10" :error-messages="firstName.errorMessage.value"
             label="Nome"></v-text-field>
@@ -15,7 +17,7 @@
             label="Telefone"></v-text-field>
 
           <v-select v-model="state.value.value" :items="items" :error-messages="state.errorMessage.value"
-            label="State/Province/Region"></v-select>
+            label="Estado"></v-select>
 
           <v-btn class="me-4" type="submit" @click="submit">
             submit
@@ -57,18 +59,19 @@ const { handleSubmit, handleReset } = useForm({
 
       return 'Phone number needs to be at least 9 digits.'
     },
-    // email(value) {
-    //   if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
+    email(value) {
+      if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
 
-    //   return 'Must be a valid e-mail.'
-    // },
-    state(value) {
+      return 'Must be a valid e-mail.'
+    },
+    state(value) { 
       if (value) return true
 
       return 'Select an item.'
     },
   },
 })
+const email = useField('email')
 const firstName = useField('firstName')
 const lastName = useField('lastName')
 const phone = useField('phone')
