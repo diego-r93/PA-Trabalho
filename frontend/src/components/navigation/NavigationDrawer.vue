@@ -42,7 +42,7 @@
 
 <script>
 import router from '@/router'
-import { logout } from '@/services/auth'
+import Authentication from '@/services/auth'
 
 export default {
   data() {
@@ -72,12 +72,8 @@ export default {
     selectItem(itemValue) {
       this.selectedItem = itemValue
     },
-    logoutUser() {
-      localStorage.removeItem('accessToken')
-      localStorage.removeItem('expiration')
-      localStorage.removeItem('userId')
-      localStorage.removeItem('userData')
-      logout()
+    logoutUser() {      
+      Authentication.logout()
       router.push('/login')
     },
 

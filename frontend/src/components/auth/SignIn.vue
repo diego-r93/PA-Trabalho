@@ -38,10 +38,8 @@
 
 <script>
 import router from '@/router'
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
-import { isAuthenticated, login, logout } from '@/services/auth'
+import Authentication from '@/services/auth'
 import UserService from '@/services/userService'
-import { useAuthStore } from '@/services/userConfiguration'
 
 export default {
   name: "SignIn",
@@ -57,36 +55,20 @@ export default {
   mounted() {
     const token = localStorage.getItem('accessToken')
     const expiration = localStorage.getItem('expiration')
-    const user_id = localStorage.getItem('userId')
-
 
     if (token && expiration) {
       const currentTime = new Date().getTime()
-      const authenticated = isAuthenticated()
+      const authenticated = Authentication.isAuthenticated()
 
       if (currentTime < parseInt(expiration)) {
         if (!authenticated) {
-          login()
+          Authentication.login()
         }
         router.push('/')
       } else {
-        logout()
-        localStorage.removeItem('accessToken')
-        localStorage.removeItem('expiration')
-        localStorage.removeItem('userId')
-        localStorage.removeItem('userData')
+        Authentication.logout()        
       }
-    }
-
-    // Pinia Configuration
-    const auth = getAuth()
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const userIdFromFirebase = user.email
-        const authStore = useAuthStore()
-        authStore.setUserId(userIdFromFirebase)
-      } 
-    })
+    }    
   },
   methods: {
     signin() {
@@ -95,15 +77,9 @@ export default {
         password: this.password,
       }).then(res => {
         this.loading = false;
-        login();
+        Authentication.login();
         
-        const user = res.data;
-
-        // Pinia Configuration
-        const userIdFromFirebase = user.email
-        const authStore = useAuthStore()
-        authStore.setUserId(userIdFromFirebase)
-
+        const user = res.data;       
 
         const expiration = new Date().getTime() + 3600 * 1000;
         
@@ -124,40 +100,7 @@ export default {
         console.log(error.code);
         alert(error.message);
         this.loading = false
-      });
-      // const auth = getAuth();
-      // signInWithEmailAndPassword(auth, this.email, this.password)
-      //   .then((userCredential) => {
-      //     console.log(userCredential);
-      //     this.loading = false;
-      //     login();
-
-      //     const user = userCredential.user;
-
-      //     // Pinia Configuration
-      //     const userIdFromFirebase = user.email
-      //     const authStore = useAuthStore()
-      //     authStore.setUserId(userIdFromFirebase)
-          
-
-      //     user.getIdToken()
-      //       .then((token) => {
-      //         const expiration = new Date().getTime() + 3600 * 1000;
-      //         localStorage.setItem('token', token);
-      //         localStorage.setItem('expiration', expiration);
-
-      //         router.push('/');
-      //       })
-      //       .catch((error) => {
-      //         console.log(error);
-      //         // Lida com erros ao obter o token
-      //       });
-      //   })
-      //   .catch((error) => {
-      //     console.log(error.code);
-      //     alert(error.message);
-      //     this.loading = false
-      //   });
+      });      
     },
     onSubmit() {
       if (!this.form) return

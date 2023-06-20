@@ -37,8 +37,7 @@
 
 <script>
 import router from '@/router'
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
-import { isAuthenticated, login, logout } from '@/services/auth'
+import Authentication from '@/services/auth'
 
 import UserService from "@/services/userService.js"
 
@@ -58,23 +57,18 @@ export default {
   mounted() {
     const token = localStorage.getItem('accessToken')
     const expiration = localStorage.getItem('expiration')
-    const user_id = localStorage.getItem('userId')
 
     if (token && expiration) {
       const currentTime = new Date().getTime()
-      const authenticated = isAuthenticated()
+      const authenticated = Authentication.isAuthenticated()
 
       if (currentTime < parseInt(expiration)) {
         if (!authenticated) {
-          login()
+          Authentication.login()
         }
         router.push('/')
       } else {
-        logout()
-        localStorage.removeItem('accessToken')
-        localStorage.removeItem('expiration')
-        localStorage.removeItem('userId')
-        localStorage.removeItem('userData')
+        Authentication.logout()       
       }
     }
   },
@@ -95,27 +89,7 @@ export default {
           .catch((error) => {
             alert(error.message);
             this.loading = false
-          })
-      // const auth = getAuth();
-
-      // fireStoreDataService.create({ email: this.email })
-      //   .then(() => {
-      //     createUserWithEmailAndPassword(auth, this.email, this.password)
-      //       .then((userCredential) => {
-      //         const userId = this.email
-      //         fireStoreDataService.update(userId, JSON.stringify({mongo: `user-${userId}`}))
-      //         console.log(userCredential);
-      //         alert("Cadastro realizado com sucesso! Faça seu login.");
-      //         router.push('/login');
-      //       })
-      //       .catch((error) => {
-      //         alert(error.message);
-      //         this.loading = false
-      //       })
-      //   })
-      //   .catch(e => {
-      //     console.log(e)
-      //   })
+          })    
     },
     onSubmit() {
       if (!this.form) return

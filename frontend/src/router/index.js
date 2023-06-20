@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { isAuthenticated } from '@/services/auth'
+import Authentication from '@/services/auth'
 
 const routes = [
   {
@@ -93,7 +93,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
-  const authenticated = isAuthenticated()
+  const authenticated = Authentication.isAuthenticated()
 
   if (requiresAuth && !authenticated) {
     next('/login')
