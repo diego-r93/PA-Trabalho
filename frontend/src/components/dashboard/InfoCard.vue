@@ -4,40 +4,17 @@
       <v-col cols="12">
         <v-card class="mx-auto" prepend-icon="mdi-home">
           <template v-slot:title>
-            This is a title
+            DashBoard
           </template>
           <v-card-text>
-            This is content
+            content
           </v-card-text>
         </v-card>
       </v-col>
 
-      <v-col v-for="card in firstCards" :key="card" :cols="card.flex">
-        <v-card>
-          <v-list lines="two">
-            <v-list-subheader>{{ card }}</v-list-subheader>
-            <template v-for="n in 6" :key="n">
-              <v-list-item>
-                <template v-slot:prepend>
-                  <v-avatar color="grey-darken-1"></v-avatar>
-                </template>
-
-                <v-list-item-title>Message {{ n }}</v-list-item-title>
-
-                <v-list-item-subtitle>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique
-                </v-list-item-subtitle>
-              </v-list-item>
-
-              <v-divider v-if="n !== 6" :key="`divider-${n}`" inset></v-divider>
-            </template>
-          </v-list>
-        </v-card>
-      </v-col>
-     
       <v-col cols="6">
         <v-card class="mx-auto">
-          <v-card-title>Active Sensors</v-card-title>
+          <v-card-title>Photos</v-card-title>
           <v-container fluid>
             <v-row dense>
               <v-col v-for="card in secondCards" :key="card.title" :cols="card.flex">
@@ -157,40 +134,30 @@
           </v-card-actions>
         </v-card>
       </v-col>
-
       
-      <v-col cols="6">  
-        <v-card class="mx-auto">
-          <v-img
-            class="align-end text-white"
-            height="200"
-            src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-            cover
-          >
-            <v-card-title>Historical Data</v-card-title>
-          </v-img>
+      <v-col v-for="card in firstCards" :key="card" :cols="card.flex">
+        <v-card>
+          <v-list lines="two">
+            <v-list-subheader>{{ card }}</v-list-subheader>
+            <template v-for="n in 6" :key="n">
+              <v-list-item>
+                <template v-slot:prepend>
+                  <v-avatar color="grey-darken-1"></v-avatar>
+                </template>
 
-          <v-card-subtitle class="pt-4">
-            Number 10
-          </v-card-subtitle>
+                <v-list-item-title>Message {{ n }}</v-list-item-title>
 
-          <v-card-text>
-            <div>Whitehaven Beach</div>
+                <v-list-item-subtitle>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique
+                </v-list-item-subtitle>
+              </v-list-item>
 
-            <div>Whitsunday Island, Whitsunday Islands</div>
-          </v-card-text>
-
-          <v-card-actions>
-            <v-btn color="blue">
-              Share
-            </v-btn>
-
-            <v-btn color="blue">
-              Explore
-            </v-btn>
-          </v-card-actions>
+              <v-divider v-if="n !== 6" :key="`divider-${n}`" inset></v-divider>
+            </template>
+          </v-list>
         </v-card>
       </v-col>
+      
     </v-row>
   </v-container>
 </template>
@@ -204,14 +171,15 @@ export default {
 
     firstCards: [
       { title: 'Texto 1 exemplo', src: '   ', flex: 3 },
-      { title: 'Texto 2 exemplo', src: 'IASNIAN', flex: 4 },
-      { title: 'Texto 3 exemplo', src: 'SOIFNSDF', flex: 5 },
+      { title: 'Texto 2 exemplo', src: 'IASNIAN', flex: 3 },
+      { title: 'Texto 3 exemplo', src: 'SOIFNSDF', flex: 3 },
     ],
 
     secondCards: [
-      { title: 'Sensor 1', src: 'https://img.freepik.com/vetores-premium/icone-de-controle-de-umidade_116137-1830.jpg', flex: 6 },
-      { title: 'Sensor 2', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg', flex: 6 },
-      { title: 'Sensor 3', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 6 },
+      { title: 'Image 1', src: 'src/assets/template/tomatoes.jpg', flex: 6 },
+      { title: 'Image 2', src: 'src/assets/template/hydroponic.jpg', flex: 6 },
+      { title: 'Image 3', src: 'src/assets/template/rosemary.jpg', flex: 6 },
+      { title: 'Image 4', src: 'src/assets/template/hydroponic2.jpg', flex: 6 },
     ],
 
     thirdCards: [],
