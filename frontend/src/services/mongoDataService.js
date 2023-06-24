@@ -1,4 +1,4 @@
-import { http, httpWithAuthorization, setAuthorizationHeader } from "./http-common"
+import { httpWithAuthorization, setAuthorizationHeader } from "./http-common"
 
 class MongoDataService {
   getAllBoards(token) {

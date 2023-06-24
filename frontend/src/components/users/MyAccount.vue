@@ -4,7 +4,7 @@
       <v-col cols="12" sm="8" md="6">
         <form @submit.prevent="submit">
           <!-- <v-text-field v-model="userId" label="E-mail" variant="solo" disabled></v-text-field> -->
-          
+
           <v-text-field v-model="userData.email" label="E-mail" variant="solo" disabled></v-text-field>
 
           <v-text-field v-model="firstName.value.value" :counter="10" :error-messages="firstName.errorMessage.value"
@@ -35,12 +35,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useField, useForm } from 'vee-validate'
-
 import UserService from '@/services/userService.js'
-
-import { useAuthStore } from '@/services/userConfiguration'
-
-import { getAuth, onAuthStateChanged } from "firebase/auth"
 
 const { handleSubmit, handleReset } = useForm({
   validationSchema: {
@@ -64,14 +59,14 @@ const { handleSubmit, handleReset } = useForm({
 
       return 'Must be a valid e-mail.'
     },
-    state(value) { 
+    state(value) {
       if (value) return true
 
       return 'Select an item.'
     },
   },
 })
-const email = useField('email')
+// const email = useField('email')
 const firstName = useField('firstName')
 const lastName = useField('lastName')
 const phone = useField('phone')
@@ -106,19 +101,6 @@ const items = ref([
   'Sergipe (SE)',
   'Tocantins (TO)',
 ])
-
-// Pinia Configuration
-const auth = getAuth()
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    const userIdFromFirebase = user.email
-    const authStore = useAuthStore()
-    authStore.setUserId(userIdFromFirebase)
-  }
-})
-
-// const authStore = useAuthStore()
-// const userId = authStore.userId
 
 const userId = localStorage.getItem('userId')
 const userData = JSON.parse(localStorage.getItem('userData'))

@@ -38,7 +38,6 @@
 <script>
 import router from '@/router'
 import Authentication from '@/services/auth'
-
 import UserService from "@/services/userService.js"
 
 export default {
@@ -68,13 +67,13 @@ export default {
         }
         router.push('/')
       } else {
-        Authentication.logout()       
+        Authentication.logout()
       }
     }
   },
   methods: {
     signup() {
-      const userData = { 
+      const userData = {
         email: this.email,
         firstName: this.firstName,
         lastName: this.lastName,
@@ -82,14 +81,14 @@ export default {
       }
       UserService.create(userData)
         .then((userCredential) => {
-            console.log(userCredential);
-            alert("Cadastro realizado com sucesso! Faça seu login.");
-            router.push('/login');
-          })
-          .catch((error) => {
-            alert(error.message);
-            this.loading = false
-          })    
+          console.log(userCredential);
+          alert("Cadastro realizado com sucesso! Faça seu login.");
+          router.push('/login');
+        })
+        .catch((error) => {
+          alert(error.message);
+          this.loading = false
+        })
     },
     onSubmit() {
       if (!this.form) return

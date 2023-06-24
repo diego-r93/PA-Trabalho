@@ -29,8 +29,8 @@
 </template>
 
 <script>
-import router from '@/router'
-import { getAuth, sendPasswordResetEmail } from "firebase/auth"
+// import router from '@/router'
+// import { getAuth, sendPasswordResetEmail } from "firebase/auth"
 
 export default {
   name: 'SignUp',
@@ -47,17 +47,17 @@ export default {
       if (!this.form) return
 
       this.loading = true
-      const auth = getAuth();
-      sendPasswordResetEmail(auth, this.email)
-        .then(() => {
-          alert('Password reset email sent!')
-          router.push('/login');      
-        })
-        .catch((error) => {
-          console.log(error.code)
-          alert(error.message)
-          this.loading = false
-        })
+      // const auth = getAuth();
+      // sendPasswordResetEmail(auth, this.email)
+      //   .then(() => {
+      //     alert('Password reset email sent!')
+      //     router.push('/login');      
+      //   })
+      //   .catch((error) => {
+      //     console.log(error.code)
+      //     alert(error.message)
+      //     this.loading = false
+      //   })
     },
     required(v) {
       return !!v || 'Field is required'
